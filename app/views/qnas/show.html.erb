@@ -1,0 +1,415 @@
+<div class="container">
+    <%= render "layouts/sidebar" %>
+    <div class="content-box col-md-8">
+        <div class="page-title">
+            <h2>Q&A</h2>
+            <ol class="breadcrumb">
+              <li><a href="/">Home</a></li>
+              <li><a href="/Q&A">Q&A</a></li>
+              <li class="active">
+                  <a href="/Q&A/search/?category=<%=@qna.category%>&method=title&answer=all&search_keyword=">
+                    <% if @qna.category == "Autosar" %>
+                        <%= @qna.category %>
+                    <% else %>
+                        기타
+                    <% end %>
+                  </a>
+             </li>
+            </ol>
+        </div>
+        <div class="page-content">
+            <div class="qna-wrapper">
+                <div class="title">
+                    <h4><span style="color:#db3445;">Q:</span> <%=@qna.title %></h4>
+                    <span class="created_at"><%= @qna.created_at.strftime("%Y-%m-%d. %H:%M") %></span> 
+                </div>
+                <div class="qna-info">
+                    <ul class="qna-info-lists">
+                        <% if @qna.user.present? %>
+                            <% if user_signed_in? %>
+                                <% if current_user.admin? %>
+                                     <li>작성자 : <button id="user-info" data-toggle="modal" data-target="#myModal"><%= @qna.user.nickname %></button></li> 
+                                <% else %>
+                                    <li>작성자 : <%= @qna.user.nickname %></li> 
+                                <% end %>
+                            <% else %>
+                                <li>작성자 : <%= @qna.user.nickname %></li> 
+                            <% end %>
+                        <% else %>
+                             <li>작성자 : </li> 
+                        <% end %>
+                        <% if user_signed_in? %>
+                            <p class="button-wrapper">
+                                <% if can? :update, @qna %>
+                                    <a href="/Q&A/show/<%=@qna.id %>/edit" class="btn btn-default" id="edit-button">수정</a>
+                                <% end %>
+                                <% if can? :delete, @qna %>
+                                    <a href="/Q&A/show/<%=@qna.id %>/destroy" class="btn btn-default" id="delete-button" onclick="return confirm('정말로 삭제하시겠습니까? 삭제 후에는 복구가 불가능합니다.')">삭제</a>
+                                <% end %>
+                            </p>
+                        <% end %>
+                    </ul>
+                </div>
+                <% if @qna.user.present? %>
+                <div id="myModal" class="modal fade" data-backdrop="false" role="dialog">
+                  <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">사용자 정보</h4>
+                      </div>
+                      <div class="modal-body">
+                        <table class="table">
+                            <tr>
+                                <td>이메일</td>
+                                <td><%= @qna.user.email %></td>
+                            </tr>
+                            <tr>
+                                <td>이름</td>
+                                <td><%= @qna.user.name %></td>
+                            </tr>
+                            <tr>
+                                <td>닉네임</td>
+                                <td><%= @qna.user.nickname %></td>
+                            </tr>
+                            <tr>
+                                <td>회사명</td>
+                                <td><%= @qna.user.company_name %> (
+                                <% if @qna.user.company_private == true %>
+                                    공개
+                                <% else %>
+                                    비공개
+                                <% end %>
+                                )
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>회사번호</td>
+                                <td>
+                                    <% if @qna.user.company_tel_num_1 !="" %>
+                                            <%= @qna.user.company_tel_num_1 %>-
+                                            <%= @qna.user.company_tel_num_2 %>-
+                                            <%= @qna.user.company_tel_num_3 %>
+                                    <% else %>
+                                        회사번호 정보가 없습니다.
+                                    <% end %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>회사주소</td>
+                                <td>
+                                    <% if @qna.user.company_address != "" %>
+                                        (<%=@qna.user.company_address_post_num %>) <%=@qna.user.company_address %>
+                                        <% if @qna.user.company_address_details !="" %>
+                                            , <%= @qna.user.company_address_details %>
+                                        <% end %>
+                                        <% if @qna.user.company_address_extra_info !="" %>
+                                            <%= @qna.user.company_address_extra_info %>
+                                        <% end %>
+                                    <% else %>
+                                        회사주소 정보가 없습니다.
+                                    <% end %>
+                                </td>
+                            </tr>
+                        </table>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <% end %>
+                <div class="qna-content">
+                    <%= auto_link(@qna.content)%>
+                    <div class="text-center">
+                    <% if @qna.image.present? %>
+                        <%= image_tag("#{@qna.image}", :class =>"qna-image") %>
+                    <% else %>
+                        
+                    <% end %>
+                    </div>
+                </div>
+            </div>
+            <% unless @qna.reply.present? %>
+                <% if user_signed_in? %>
+                    <% if can? :create, @qna.reply %>
+                        <a href="/Q&A/<%=@qna.id%>/reply" class="btn btn-default" id="new-button">답변 작성</a>
+                    <% end %>
+                <% end %>
+            <% end %>
+            <% if @qna.reply.present? %>
+            <div class="answer-wrapper">
+                <div class="title">
+                    <h4><span style="color:#db3445;">A:</span> <%=@qna.reply.title %></h4>
+                    <span class="created_at"><%= @qna.created_at.strftime("%Y-%m-%d. %H:%M") %></span> 
+                </div>
+                <div class="answer-info">
+                    <ul class="answer-info-lists">
+                        <li>관리자</li> 
+                         <% if user_signed_in? %>
+                            <% if can? :edit,:delete , @qna.reply %>
+                                <a href="/Q&A/show/<%=@qna.id %>/<%=@qna.reply.id %>/destroy" id="new-button-2" class="btn btn-default" onclick="return confirm('정말로 삭제하시겠습니까? 삭제 후에는 복구가 불가능합니다.')">삭제</a>
+                                <a href="/Q&A/<%= @qna.id %>/<%=@qna.reply.id %>/edit" class="btn btn-default" id="new-button">수정</a>
+                            <% end %>
+                        <% end %>
+                    </ul>
+                </div>
+                <div class="answer-content">
+                    <%= auto_link(@qna.reply.content)%>
+                    <div class="text-center">
+                        <% if @qna.reply.image.present? %>
+                            <%= image_tag("#{@qna.reply.image}", :class =>"qna-image") %>
+                        <% end %>
+                    </div>
+                </div>
+            </div>
+            <% end %>
+        </div>
+        <a href="/Q&A" class="btn btn-default" id="Bck2Board">게시판으로</a>
+        <br><br>
+    </div>
+</div>
+
+<style>
+    span.created_at{
+        float:right;
+        color:#828282;
+        font-size:13px;
+        position:absolute;
+        bottom:5px;
+        right:5px;
+        text-align:right;    
+    }
+    ul.qna-info-lists > li{
+        list-style: none;
+        display:inline-block;
+        font-weight:600;
+        margin-left:10px;
+    }
+    ul.qna-info-lists{
+        padding-left:10px;
+        text-align:left;
+        margin-top:15px;
+        margin-bottom:5px;
+    }
+    ul.answer-info-lists > li{
+        list-style: none;
+        display:inline-block;
+        font-weight:600;
+        margin-left:10px;
+    }
+    ul.answer-info-lists{
+        padding-left:10px;
+        text-align:left;
+        margin-top:15px;
+        margin-bottom:5px;
+    }
+
+    div.title{
+        position:relative;
+        margin-top:10px;
+        border-top: 2px solid #DDD;
+        border-bottom: 1px solid #ddd; 
+        max-height:70px;
+    }
+    div.title > h4{
+        overflow:hidden;
+        max-height:60px;
+        line-height: 28px;
+        padding-left:10px;
+        display:inline-block;
+        max-width:540px;
+        word-break: break-all;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3; 
+        -webkit-box-orient: vertical;
+    }
+    .modal-body > p > b {
+        color:#db3445;
+    }
+    button#user-info,button#user-info:focus {
+        padding: 0;
+        border: none;
+        background: none;
+        outline: none;
+    }
+    button#user-info:hover{
+        color:#db3445;
+        text-decoration:underline;
+    }
+    div.qna-content{;
+        margin-left:3%;
+        margin-right:3%;
+        font-size:16px;
+        white-space: pre-line;
+    }
+    div.answer-content{;
+        margin-left:3%;
+        margin-right:3%;
+        font-size:16px;
+        white-space: pre-line;
+    }
+
+    div.answer-wrapper{
+        margin-top:50px;
+    }
+
+    div.qna-wrapper, div.answer-wrapper{
+        padding-bottom:28px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+    a#new-button, a#edit-button, a#delete-button, a#new-button-2, a#Bck2Board{
+        font-size: 11px;
+        padding: 3px 6px;
+    }
+    a#new-button, a#new-button-2 , a#Bck2Board{ float:right;}
+    a#new-button {display:inline-block; margin-left: 10px;}
+    a#new-button-2 {display:inline-block; margin-left: 5px;}
+    
+    p.button-wrapper{
+        float:right;
+        display:inline-block;
+        margin-top:-4px;
+    }
+    ul.edit-delete > li{
+        list-style:none;
+        display:inline-block;
+        margin-left:10px;
+        margin-right:10px;
+        color:#2d2d2d;
+        text-decoration:none;
+        font-weight:bold;
+    }
+    ul.edit-delete{
+        float:right;
+        display:inline-block;
+        text-align:right;
+        margin-top:45px;
+        margin-bottom:0;
+        padding-left:0;
+    }
+    ul.edit-delete > li> a , ul.edit-delete > li> a:hover, ul.edit-delete > li>a:visited, ul.edit-delete > li>a:active{
+        color:#2d2d2d;
+        text-decoration:none;
+    }
+    li.active > a{
+        color:#db3445;
+    }
+    .page-title{
+        font-family:Jeju;
+    }
+    .content-box{
+        margin-top:60px;
+        margin-left:10px;
+    }
+    hr#title-underbar{
+       border-bottom:1px solid #eee;
+       margin-bottom:0px;
+    }
+    .page-title > h2{
+        display:inline-block;
+    }
+    p.qna-content{
+        max-width:445px;
+        text-overflow: ellipsis;
+        white-space: nowrap; 
+        overflow: hidden; 
+        font-size:18px;
+        color:#828282;
+        text-decoration:none;
+        margin-left:30px;
+        margin-top:15px;
+        font-weight:300;
+    }
+    h4.qna-title{
+        margin-top:48px;
+        font-size:25px;
+        font-weight:400;
+        color:#606266;
+        clear:right;
+        word-break:keep-all;
+        display:block;
+    }
+    ol.breadcrumb{
+        background-color:transparent;
+        float:right;
+        font-size:12px;
+        padding-right:0px;
+    }
+    ol.breadcrumb li+li:before {
+        padding: 8px;
+        color: black;
+        content: ">";
+    }
+    ol.breadcrumb > li > a{
+        color:#828282;
+        text-decoration:none;
+    }
+    ol.breadcrumb li.active > a{
+        color:#db3445;
+    }
+    .breadcrumb{
+        margin-top: 27px;
+        margin-bottom:0px;
+    }
+    .table{
+        width: 100%;
+    }
+    tr > td:nth-child(1){
+        text-align:center;
+        font-weight:bold;
+        color:#db3445;
+        border-right:1px solid #eee;
+        min-width:70px;
+    }
+    tr:last-child > td{
+        border-bottom:1px solid #eee;
+    }
+    table.table{
+        margin-bottom:0;
+    }
+    .modal-body{
+        padding:0;
+    }
+    .modal-dialog {
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .modal-content {
+      margin: 0 auto;
+    }
+    
+    .qna-image{
+        width:300px;
+    }
+    @media (max-width: 480px) {
+        .content-box {
+            margin-top:0;
+            padding-top:10px;
+            margin-left: 0;
+        }
+    }
+    @media (max-width: 480px) {
+        img.qna-image{
+            max-width:100%;
+            display:block;
+            margin: auto;
+            margin-bottom:10px;
+        }
+        ul.qna-info-lists > li {
+            margin-left: 0px;
+        }
+        ul.answer-info-lists > li{
+            margin-left: 0px;
+        }
+        div.answer-wrapper{
+            margin-top:35px;
+        }
+    }
+</style>

@@ -1,0 +1,103 @@
+<div class="side-bar col-md-2">
+    <div class="panel-group" id="accordion">
+        <div class="side-bar-title">
+            Quick Menu
+        </div>
+        <hr style="margin-top:2px;">
+        <p class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">> KOSPAR</a>
+        </p>
+        <div id="collapseOne" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <li><a href="/About_us">- About us</a></li>
+                <li><a href="/Notice">- Notice</a></li>
+            </div>
+        </div>
+        <hr>
+        <p class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">> Tech Trends</a>
+        </p>
+        <div id="collapseTwo" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <li><a href="/trends/latest">- Latest Trends</a></li>
+            </div>
+        </div>
+        <hr>
+        <p class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">> Tech Standards</a>
+        </p>
+        <div id="collapseThree" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <li><a href="/Design_documents">- Design Documents</a></li>
+                <li><a href="/Opensrcs">- Open Sources</a></li>
+            </div>
+        </div>
+        <hr>
+        <p class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFour">> Board</a>
+        </p>
+        <div id="collapseFour" class="panel-collapse collapse in">
+            <div class="panel-body">
+                <li><a href="/Q&A">- Q & A</a></li>
+                <li><a href="/forums">- KOSPAR Forums</a></li>
+            </div>
+        </div>
+        <hr>
+    </div>
+</div> 
+<style>
+    .side-bar-title{
+        width:100%;
+        text-align:center;
+        font-size:18px;
+        color:white;
+        background-color:#db3445;
+        border-radius:3px;
+    }
+    .side-bar{
+        height:100%;
+        width: 200px;
+        top:0;
+        padding-top:150px;
+        margin-right:30px;
+        clear:right;
+    }
+    .side-bar p{
+        margin-left:5px;
+        font-size:14px;
+        color:#db3445;
+        font-weight:bold;
+    }
+    .panel-title{
+        border:0;
+    }
+    .side-bar li{
+        font-size:13px;
+        list-style:none;
+        margin-bottom:3px;
+    }
+    #accordion a{
+        text-decoration:none;
+    }
+    div.panel-body{
+        padding-top:10px;
+        padding-bottom:10px;
+        padding-left:25px;
+        
+    }
+    .panel-body a {
+        color:black;
+    }
+    .panel-collapse.collapse.in{
+        margin-bottom:8px;
+    }
+    hr{
+        margin-top:10px;
+        margin-bottom:10px;
+    }
+    @media (max-width: 1000px) {
+        div.side-bar{
+            display:none;
+        }
+    }
+</style>

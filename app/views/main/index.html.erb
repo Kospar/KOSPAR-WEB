@@ -1,0 +1,708 @@
+<style>
+    .goBoard{
+        color:#db3445; 
+        font-size:13px; 
+        margin-right:-20px; 
+        float:right; 
+        margin-top:-5px;
+    }
+    div#main-mobile{
+        display:none;
+    }
+    @media (max-width: 480px) {
+        header{
+            display:none;
+        }
+        div#main-trend-box{
+            display:none;
+        }
+        div#notice-box {
+            margin-left: 0px !important; 
+        }
+        div#main-mobile{
+            display:block;
+            margin-bottom:30px;
+        }
+        div.link-wrapper{
+            width:100px;
+            height:100px;
+            border:1px solid #db3445;
+            border-radius:10px;
+            margin:0.5em;
+            display:inline-block;
+        }
+        div.link-wrapper:hover{
+            background-color:#db3445;
+        }
+        div.link-wrapper > a:hover{
+            color:white
+        }
+        img.main-logo-mobile{
+            margin-top:40px;
+            margin-bottom:40px;
+            width:100%;
+        }
+        div#notice-box{
+            padding-left:24px;
+        }
+        div.link-wrapper > a{
+            display:inline-block;
+            height:100px;
+            width:100px;
+            padding-top:39px;
+            color: #444;
+            font-weight:700;
+            text-decoration:none;
+        }
+        div.link-wrapper:nth-child(4) > a{
+            line-height: 23px;
+            padding-top: 25px;
+        }
+        div.link-wrapper:nth-child(5) > a{
+            line-height: 23px;
+            padding-top: 25px;
+        }
+        div.link-wrapper:nth-child(6) > a{
+            line-height: 23px;
+            padding-top: 25px;
+        }
+        div.link-wrapper:nth-child(7) > a{
+            line-height: 23px;
+            padding-top: 25px;
+        }
+        div.link-wrapper:nth-child(8) > a{
+            line-height: 23px;
+            padding-top: 25px;
+        }
+        div.link-wrapper:nth-child(9) > a{
+            line-height: 23px;
+            padding-top: 25px;
+        }
+        
+    }
+    @media (max-width: 375px) {
+        div.link-wrapper{
+            width:90px;
+            height:90px;
+            border:1px solid #db3445;
+            margin:0.2em;
+            display:inline-block;
+        }
+        div.link-wrapper > a{
+            display:inline-block;
+            height:90px;
+            width:90px;
+            padding-top:33px;
+            color: #444;
+            font-weight:700;
+        }
+        div.link-wrapper:nth-child(4) > a{
+            line-height: 23px;
+            padding-top: 22px;
+        }
+        div.link-wrapper:nth-child(5) > a{
+            line-height: 23px;
+            padding-top: 22px;
+        }
+        div.link-wrapper:nth-child(6) > a{
+            line-height: 23px;
+            padding-top: 22px;
+        }
+        div.link-wrapper:nth-child(7) > a{
+            line-height: 23px;
+            padding-top: 22px;
+        }
+        div.link-wrapper:nth-child(8) > a{
+            line-height: 23px;
+            padding-top: 22px;
+        }
+        div.link-wrapper:nth-child(9) > a{
+            line-height: 23px;
+            padding-top: 22px;
+        }
+        div#notice-box{
+            padding-left:26px;
+        }
+        div.notice-wrapper {
+            max-width: 96%;
+        }
+    }
+    @media (max-width: 320px) {
+        div.link-wrapper{
+            width:78px;
+            height:78px;
+            border:1px solid #db3445;
+            margin:0.2em;
+            display:inline-block;
+        }
+        div.link-wrapper > a{
+            display:inline-block;
+            height:78px;
+            width:78px;
+            padding-top:30px;
+            color: #444;
+            font-weight:700;
+        }
+        div.link-wrapper:nth-child(4) > a{
+            line-height: 23px;
+            padding-top: 16px;
+        }
+        div.link-wrapper:nth-child(5) > a{
+            line-height: 23px;
+            padding-top: 16px;
+        }
+        div.link-wrapper:nth-child(6) > a{
+            line-height: 23px;
+            padding-top: 16px;
+        }
+        div.link-wrapper:nth-child(7) > a{
+            line-height: 23px;
+            padding-top: 16px;
+        }
+        div.link-wrapper:nth-child(8) > a{
+            line-height: 23px;
+            padding-top: 16px;
+        }
+        div.link-wrapper:nth-child(9) > a{
+            line-height: 23px;
+            padding-top: 16px;
+        }
+        div#notice-box{
+            padding-left:26px;
+        }
+        div.notice-wrapper {
+            max-width: 96%;
+        }
+        img.partners-logo{
+            margin-left: 15px;
+            margin-right: 15px;
+        }
+        div#notice-box{
+            padding-left:19px;
+        }
+        div.notice-wrapper {
+            max-width: 97%;
+        }
+    }
+    @media (max-width: 767px) {
+        .goBoard{
+            margin-top:-17px;
+        }
+        
+    }
+    p.main-box-content{
+            max-width: 430px;
+            overflow: hidden;
+            white-space:nowrap;
+            text-overflow: ellipsis;
+    }
+    div#main-page.container-fluid{
+        position:relative;
+        margin-top:60px;
+    }
+    .alert{
+        margin-bottom:0;
+    }
+    center{
+        margin-top:70px;
+    }
+</style>
+
+<center><%= flash_messages %></center>
+
+<header>
+    <%=image_tag("main.png", :class => "main-image") %>
+</header>
+
+<div class="container-fluid"  id="main-page">
+   	<div class="rows col-md-8" id="main-trend-box">
+   		<div class="tab-container">
+	      <ul class="nav nav-tabs nav-tabs-left nav-centered" role="tablist">
+	        <li role="presentation" class="active">
+	          <a href="#Latest-Trends" data-toggle="tab" role="tab" id="trends-section">
+	            Latest-Trends
+	          </a>
+	        </li>
+	        <li role="presentation">
+	          <a href="#Design-Documents" data-toggle="tab" role="tab" id="docs-section">
+	            Design Documents
+	          </a>
+	        </li>
+	        <li role="presentation">
+	          <a href="#Open-Sources" data-toggle="tab" role="tab" id="srcs-section">
+	            Open Sources
+	          </a>
+	        </li>
+	        <li role="presentation">
+	          <a href="#KOSPAR-Forums" data-toggle="tab" role="tab" id="forums-section">
+	            KOSPAR Forums
+	          </a>
+	        </li>
+	      </ul>
+	      <div id="my_side_tabs" class="tab-content side-tabs side-tabs-left">
+	        <div class="tab-pane fade in active" id="Latest-Trends" role="tabpanel">
+	        	<div class="col-sm-12">
+	        	    <% if @trends.length >= 8 %> 
+	        	        <p style="text-align:right"><a href="/trends/latest" class="goBoard" style="color:#db3445; font-size:13px;margin-right:-20px; float:right; margin-top:-5px;">게시판 바로가기</a></p>
+    	        	    <% for i in 0..7 %>
+    	                    <p class="main-box-content"><i class="fa fa-minus-square-o" aria-hidden="true"></i>
+    	                       <a href="/trends/latest/<%= @trends[i].id %>" class="tab-li-a"><%=@trends[i].title %></a>
+    	                       <span class="created_at tab"><%= @trends[i].created_at.strftime("%Y-%m-%d") %></span>
+    	                    </p>
+    	                <% end %>
+    	            <% else %>
+    	                <p style="text-align:right"><a href="/trends/latest" class="goBoard" >게시판 바로가기</a></p>
+    	                <% @trends.each do |e| %>
+    	                    <p class="main-box-content"><i class="fa fa-minus-square-o" aria-hidden="true"></i>
+    	                       <a href="/trends/latest/<%= e.id %>" class="tab-li-a"><%=e.title %></a>
+    	                       <span class="created_at tab"><%= e.created_at.strftime("%Y-%m-%d") %></span>
+    	                    </p>
+    	                <% end %>
+	                <% end %>
+	        	</div>
+	        </div>
+	        <div class="tab-pane fade" id="Design-Documents" role="tabpanel">
+	        	<div class="col-sm-12">
+	        	    <% if @docs.length >= 8 %> 
+	        	        <p style="text-align:right"><a href="/Design_documents" class="goBoard" >게시판 바로가기</a></p>
+    	        	    <% for i in 0..7 %>
+    	                    <p class="main-box-content"><i class="fa fa-minus-square-o" aria-hidden="true"></i>
+    	                       <a href="/Design_documents/show/<%= @docs[i].id %>" class="tab-li-a"><%=@docs[i].title %></a>
+    	                       <span class="created_at tab"><%= @docs[i].created_at.strftime("%Y-%m-%d") %></span>
+    	                    </p>
+    	                <% end %>
+    	            <% else %>
+    	                <p style="text-align:right"><a href="/Design_documents" class="goBoard">게시판 바로가기</a></p>
+    	                <% @docs.each do |e| %>
+    	                    <p class="main-box-content"><i class="fa fa-minus-square-o" aria-hidden="true"></i>
+    	                       <a href="/Design_documents/show/<%= e.id %>" class="tab-li-a"><%=e.title %></a>
+    	                       <span class="created_at tab"><%= e.created_at.strftime("%Y-%m-%d") %></span>
+    	                    </p>
+    	                <% end %>
+	                <% end %>
+	        	</div>
+	        </div>
+	        <div class="tab-pane fade" id="Open-Sources" role="tabpanel">
+				<div class="col-sm-12">
+	        	    <% if @srcs.length >= 8 %> 
+	        	        <p style="text-align:right"><a href="/Opensrcs" class="goBoard" >게시판 바로가기</a></p>
+    	        	    <% for i in 0..7 %>
+    	                    <p class="main-box-content"><i class="fa fa-minus-square-o" aria-hidden="true"></i>
+    	                       <a href="/Opensrcs/show/<%= @srcs[i].id %>" class="tab-li-a"><%=@srcs[i].title %></a>
+    	                       <span class="created_at tab"><%= @srcs[i].created_at.strftime("%Y-%m-%d") %></span>
+    	                    </p>
+    	                <% end %>
+    	            <% else %>
+    	                <p style="text-align:right"><a href="/Opensrcs" class="goBoard" >게시판 바로가기</a></p>
+    	                <% @srcs.each do |e| %>
+    	                    <p class="main-box-content"><i class="fa fa-minus-square-o" aria-hidden="true"></i>
+    	                       <a href="/Opensrcs/show/<%= e.id %>" class="tab-li-a"><%=e.title %></a>
+    	                       <span class="created_at tab"><%= e.created_at.strftime("%Y-%m-%d") %></span>
+    	                    </p>
+    	                <% end %>
+	                <% end %>
+	        	</div>
+	        </div>
+	        <div class="tab-pane fade" id="KOSPAR-Forums" role="tabpanel">
+	        	<div class="col-sm-12">
+	        	    <% if @forums.length >= 8 %> 
+	        	        <p style="text-align:right"><a href="/forums" class="goBoard" >게시판 바로가기</a></p>
+    	        	    <% for i in 0..7 %>
+    	                    <p class="main-box-content"><i class="fa fa-minus-square-o" aria-hidden="true"></i>
+    	                       <a href="/forums/<%= @forums[i].forum_board_id %>/post/<%= @forums[i].id %>" class="tab-li-a">[<%=@boards.find(@forums[i].forum_board_id).subject %>]&nbsp;<%=@forums[i].title %></a>
+    	                       <span class="created_at tab"><%= @forums[i].created_at.strftime("%Y-%m-%d") %></span>
+    	                    </p>
+    	                <% end %>
+    	            <% else %>
+    	                <p style="text-align:right"><a href="/forums" class="goBoard" >게시판 바로가기</a></p>
+    	                <% @forums.each do |e| %>
+    	                    <p class="main-box-content"><i class="fa fa-minus-square-o" aria-hidden="true"></i>
+    	                       <a href="/forums/<%= e.forum_board_id %>/post/<%= e.id %>" class="tab-li-a">[<%=@boards.find(e.forum_board_id).subject %>]&nbsp;<%=e.title %></a>
+    	                       <span class="created_at tab"><%= e.created_at.strftime("%Y-%m-%d") %></span>
+    	                    </p>
+    	                <% end %>
+	                <% end %>
+	        	</div>
+	        </div>
+	      </div>
+	    </div>
+    </div>
+    <div class="col-md-8 text-center" id="main-mobile">
+        <img src="/logo.png" class="main-logo-mobile" %>
+        <div class="text-center">
+            <div class="link-wrapper">
+                <a href="/About_us">About us<br></a>
+            </div>
+            <div class="link-wrapper">
+                <a href="/Notice">Notice<br></a>
+            </div>
+            <div class="link-wrapper">
+                <a href="/Q&A">Q & A<br></a>
+            </div>
+            <div class="link-wrapper">
+                <a href="/trends/latest">Latest<br>Trends</a>
+            </div>
+            <div class="link-wrapper">
+                <a href="/Design_documents">Design<br>Documents</a>
+            </div>
+            <div class="link-wrapper">
+                <a href="/Opensrcs">Open<br>Sources</a>
+            </div>
+            <div class="link-wrapper" style="background:#db3445;">
+                <a href="#" style="color:transparent;">KOSPAR<br>Forums</a>
+            </div>
+            <div class="link-wrapper">
+                <a href="/forums">KOSPAR<br>Forums</a>
+            </div>
+            <div class="link-wrapper" style="background:#db3445;">
+                <a href="#" style="color:transparent;">KOSPAR<br>Forums</a>
+            </div>
+        </div>
+    </div>
+    <div class="rows col-md-3" id="notice-box">
+        <h3 id="this_month_notice_title">주요 일정</h3>
+            <% if @this_month_notices.present? %>
+                <% if @this_month_notices.length <= 3 %>
+                    <% @this_month_notices.each do |t| %>
+                        <a href="/Notice/<%=t.id %>" class="notice-box">
+                            <div class="notice-wrapper">
+                                <h4 class="notice-title" style="color:#db3445;"><%= t.title %></h4>
+                                <% if t.startDate == t.endDate %>
+                                    <p class="created_at">&middot; 일정 : <%= t.startDate %></p>
+                                <% else %>
+                                    <p class="created_at">&middot; 일정 : <%= t.startDate %> ~ <%= t.endDate %></p>
+                                <% end %>
+                            <p class="created_at">&middot; 장소 : <span><%= t.address %></span></p>
+                            </div>
+                        </a>
+                    <% end %>
+                <% else %>
+                    <% for i in 0..2 %>
+                        <a href="/Notice/<%=@this_month_notices[i].id %>" class="notice-box">
+                            <div class="notice-wrapper">
+                                <h4 class="notice-title" style="color:#db3445;"><%= @this_month_notices[i].title %></h4>
+                                <% if @this_month_notices[i].startDate == @this_month_notices[i].endDate %>
+                                    <p class="created_at">&middot; 일정 : <%= @this_month_notices[i].startDate %></p>
+                                <% else %>
+                                    <p class="created_at">&middot; 일정 : <%= @this_month_notices[i].startDate %> ~ <%= @this_month_notices[i].endDate %></p>
+                                <% end %>
+                            <p class="created_at">&middot; 장소 : <span><%= @this_month_notices[i].address %></span></p>
+                            </div>
+                        </a>
+                    <% end %>
+                <% end %>
+            <% else %>
+                <p style="padding-left:10px; margin-top:15px;">일정이 없습니다.</p>
+            <% end %>
+        </div>
+    <div class="partners text-center">
+        <div class="col-md-12">
+            <%=image_tag('katech_logo.png', :class => 'partners-logo', :id =>"katech_logo") %>
+            <%=image_tag('hyu_logo.png', :class => 'partners-logo') %>
+            <%=image_tag('snu_logo.png', :class => 'partners-logo') %>
+            <%=image_tag('pnu_logo.png', :class => 'partners-logo') %>
+            <%=image_tag('seoyon_logo.png', :class => 'partners-logo') %>
+            <%=image_tag('kyungshin_logo.png', :class => 'partners-logo', :id =>"kyungshin_logo") %>
+            <%=image_tag('yura_logo.png', :class => 'partners-logo') %>
+        </div>
+    </div>
+</div>
+<style>
+    .tab-li-a{
+        color:#444;
+    }
+    .created_at.tab{
+        margin-left:12px;
+        font-size:12px;
+    }
+    .fa.fa-minus-square-o{
+        font-size:5px;
+        color:#828282;
+        margin-right:10px;
+    }
+    #katech_logo, #kyungshin_logo{
+        height:25px;
+    }
+    .partners-logo{
+        margin-left:20px;
+        margin-right:20px;
+        margin-top:10px;
+        margin-bottom:10px;
+        height:30px;
+        padding-top:3px;
+        padding-bottom:3px;
+    }
+    .rows{
+        margin-bottom:100px;
+    }
+    /*partners break-point*/
+    @media (max-width: 1124px){
+        .rows {
+            margin-bottom:160px;
+        }
+    }
+    @media (max-width: 1000px) {
+      header{
+        margin-top: -5px !important;
+      }
+    }
+    /*주요일정 break-point*/
+    @media (max-width: 991px){
+        div#notice-box{
+            margin-left:35px;
+        }
+        #main-trend-box{
+            margin-bottom:30px;
+        }
+        div.notice-wrapper{
+            max-width: 98%;
+        }
+        .rows {
+            margin-bottom: 240px;
+        }
+    }
+    div.partners{
+        margin-top:10px;
+        width:100%;
+        position:absolute;
+        bottom:0;
+        left:0;
+        background-color:#f4f4f4;
+    }
+    #main-trend-box ul > li{
+      list-style:none;
+      padding-left:0;
+    }
+    div#main-trend-box{
+      padding-left:0;
+      padding-right:0;
+      margin-right:30px;
+      margin-left:50px;
+    }
+    #main-trend-box ul{
+      padding-left:0;
+    }
+    #this_month_notice_title, #latest_trends_title{
+        margin-top:0;
+        font-size:18px;
+        border-left: 3px solid #db3445;
+        padding-left: 7px;
+        padding-top: 3px;
+        padding-bottom: 3px;"   
+    }
+    header{
+        margin-top:-1px;
+        text-align:center;
+        border-bottom:1px solid #ddd;
+        background-color:#f4f4f4;
+    }
+    img.main-image{
+        width: 90%;
+        margin: 0 auto;
+        margin-top:80px;
+        margin-bottom:45px;
+    }
+    .table{
+        vertical-align:middle;
+    }
+    .table > thead > tr > th > span >  a{
+        color:#db3445;
+        font-size : 12px;
+        font-weight:500;
+    }
+    thead > tr > th{
+        text-align:left;
+        font-weight:700;
+        font-size:20px;
+        color:#db3445;
+    }
+    .table > tbody > tr > td{
+        padding-top:10px;
+        padding-bottom:10px;
+        border-top:1px solid #eee;
+    }
+    .table > tbody > tr > td > a{
+        color:black;
+    }
+    .table > tbody > tr > td:hover{
+        background-color:#eee;
+    }
+    tbody > tr > td:nth-child(1){
+        width:65px;
+        text-align:left;
+    }
+    table > tbody > tr:last-child > td {
+        border-bottom:1px solid #eee;
+    }
+    .table > thead > tr > th{
+        border-bottom:1px solid #eee;
+    }
+    thead{
+        border-top:2px solid #eee;
+    }
+    
+</style>
+<style>
+    p.notice-content{
+        overflow: hidden;
+        max-height: 80px;
+        margin-top: 1px;
+        line-height: 28px;
+        color: #666;
+        vertical-align: top;
+        word-break: break-all;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3; 
+        -webkit-box-orient: vertical;
+        margin-bottom:15px;
+        font-size: 19px;
+    }
+    .created_at {
+        font-size:10px;
+        color:black;
+        opacity:0.8;
+        margin-left:1px;
+        margin-top:4px;
+        margin-bottom:0px;
+        max-width:250px;
+        overflow: hidden;
+        white-space:nowrap;
+        text-overflow: ellipsis;
+    }
+    h4.notice-title{
+        font-size:13px;
+        margin-top:2px;
+        padding-bottom:2px;
+        margin-left:5px;
+        font-weight: 500;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    .notice-wrapper:hover{
+        background-color:#eee;
+    }
+    .notice-wrapper{
+        border: 1px solid #eee;
+        padding:10px;
+        margin-bottom:10px;
+        min-width:200px;
+        /*max-width:300px;*/
+    }
+    a.notice-box, a.notice-box:hover, a.notice-box:visited, a.notice-box:active{
+        text-decoration:none;
+        color:#2d2d2d;
+    }
+</style>
+<style>
+    .tab-container {
+      background: #db3445;
+      padding: 0;
+      border: solid 1px #eee;
+      height: 301px;
+      max-height: 301px;
+      overflow: hidden;
+      width: 100%;
+      margin-bottom:0px;
+    }
+    .nav-tabs.nav-tabs-left {
+      float: left;
+      border-right: 0;
+    }
+    .nav-tabs.nav-tabs-left li a {
+      margin-right: 0;
+      border-radius: 0;
+      border-right: none;
+    }
+    .nav-tabs.nav-tabs-left {
+      border-bottom: 0;
+      max-width: 33%;
+    }
+    .nav-tabs.nav-tabs-left li {
+      float: none;
+      margin: 0;
+      text-align: left;
+    }
+    .nav-tabs.nav-tabs-left li a,
+    .nav-tabs.nav-tabs-right li a {
+      text-align:center;
+      background-color: #db3445;
+      color: #fff;
+    }
+    .nav-tabs.nav-tabs-left li a:hover,
+    .nav-tabs.nav-tabs-right li a:hover {
+      background-color: rgba(255,255,255,0.9);
+      border-color: rgba(255,255,255,0.9);
+      color: #db3445;
+    }
+    .nav-tabs.nav-tabs-left li.active a,
+    .nav-tabs.nav-tabs-right li.active a,
+    .nav-tabs.nav-tabs-left li.active .glyphicon,
+    .nav-tabs.nav-tabs-right li.active .glyphicon {
+      color: #db3445;
+    }
+    .nav-tabs.nav-tabs-left li.active a:hover,
+    .nav-tabs.nav-tabs-right li.active a:hover,
+    .nav-tabs.nav-tabs-left li.active .glyphicon:hover,
+    .nav-tabs.nav-tabs-right li.active .glyphicon:hover {
+      color: #db3445;
+    }
+    .nav-tabs.nav-tabs-left li.active a,
+    .nav-tabs.nav-tabs-right li.active a,
+    .nav-tabs.nav-tabs-left li.active a:hover,
+    .nav-tabs.nav-tabs-right li.active a:hover,
+    .nav-tabs.nav-tabs-left li.active a:focus,
+    .nav-tabs.nav-tabs-right li.active a:focus {
+      background-color: #fff;
+    }
+    .nav-tabs.nav-tabs-left li:not(:last-of-type),
+    .nav-tabs.nav-tabs-right li:not(:last-of-type) {
+      margin-bottom: -1px;
+    }
+    .tab-content {
+    	background: #fff;
+    	height: 301px;
+    	max-height: 301px;
+    	overflow-y: scroll;
+    }
+    .tab-content.side-tabs .tab-pane {
+      display: none;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .tab-content.side-tabs-left {
+      margin-left: 45px;
+    }
+    .tab-content.side-tabs-left .tab-pane {
+      border-radius: 0;
+    }
+    .tab-content.side-tabs-left .tab-pane.active {
+      display: block;
+      background-color: #fff;
+      border-color: #fff;
+      color: #333;
+      font-size:16px;
+      font-weight: 400;
+    }
+    .tab-content.side-tabs-right {
+      margin-right: 45px;
+    }
+    .tab-content.side-tabs-right .tab-pane {
+      border-radius: 4px 0 0 4px;
+    }
+    main > .row:not(:first-of-type) {
+      margin-top: 1.1em;
+    }
+    col.time,
+    col.repname {
+      width: 12em;
+    }
+    col.did {
+      width: 9em;
+    }
+    .nav-tabs>li>a,.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+    	border: none;
+    }
+
+</style>

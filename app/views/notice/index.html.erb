@@ -1,0 +1,194 @@
+<div class="container">
+    <%= render "layouts/sidebar" %>
+    <div class="content-box col-md-8">
+        <div class="page-title">
+            <h2>Notice</h2>
+            <% if user_signed_in? %>
+                <% unless @notices.present? %>
+                    <% if can? :create, Notice %>
+                        <a href="/Notice/new" class="btn btn-default" id="new-button">Notice 작성</a>
+                    <% end %>
+                <% else %>
+                    <% if can? :update, Notice %>
+                        <a href="/Notice/new" class="btn btn-default" id="new-button">Notice 추가</a>
+                    <% end %>
+                <% end %>
+            <% end %>
+            <hr id="title-underbar"> 
+        </div>
+        <div class="page-content">
+            <h3 style="font-size:23px;">&middot; 이번달 일정</h3>
+            <% if @this_month_notices.present? %>
+                <% @this_month_notices.each do |t| %>
+                    <a href="/Notice/<%=t.id %>" class="notice-box">
+                        <div class="notice-wrapper">
+                            <h4 class="notice-title" style="color:#db3445;"><%= t.title %></h4>
+                            <% if t.startDate == t.endDate %>
+                                <p class="created_at">&middot; 일정 : <%= t.startDate %></p>
+                            <% else %>
+                                <p class="created_at">&middot; 일정 : <%= t.startDate %> ~ <%= t.endDate %></p>
+                            <% end %>
+                        <p class="created_at">&middot; 장소 : <%= t.address %></p>
+                        </div>
+                    </a>
+                <% end %>
+            <% else %>
+                <p style="margin-left:15px;">이번달 일정이 없습니다.</p>
+            <% end %>
+            <hr>
+            <h3 style="font-size:23px;">&middot; 지난 일정</h3>
+            <% if @prev_month_notices.present? %>
+                <% if @prev_month_notices.length > 5 %>
+                    <% for i in 0..4 %>
+                        <a href="/Notice/<%=@prev_month_notices[i].id %>" class="notice-box">
+                            <div class="notice-wrapper">
+                                <h4 class="notice-title"><%= @prev_month_notices[i].title %></h5>
+                                <% if @prev_month_notices[i].startDate == @prev_month_notices[i].endDate %>
+                                    <p class="created_at">&middot; 일정 : <%= @prev_month_notices[i].startDate %></p>
+                                <% else %>
+                                    <p class="created_at">&middot; 일정 : <%= @prev_month_notices[i].startDate %> ~ <%= @prev_month_notices[i].endDate %></p>
+                                <% end %>
+                            <p class="created_at">&middot; 장소 : <%= @prev_month_notices[i].address %></p>
+                            </div>
+                        </a>
+                    <% end %>
+                    <div class="show-box">
+                        <hr>
+                        <div class="text-center">
+                            <button id="showMore">지난 일정 더보기</button>
+                        </div>
+                    </div>
+                    <div class="show-more">
+                        <% for i in 5..@prev_month_notices.length-1 %>
+                            <a href="/Notice/<%=@prev_month_notices[i].id %>" class="notice-box">
+                                <div class="notice-wrapper">
+                                    <h4 class="notice-title"><%= @prev_month_notices[i].title %></h5>
+                                    <% if @prev_month_notices[i].startDate == @prev_month_notices[i].endDate %>
+                                        <p class="created_at">&middot; 일정 : <%= @prev_month_notices[i].startDate %></p>
+                                    <% else %>
+                                        <p class="created_at">&middot; 일정 : <%= @prev_month_notices[i].startDate %> ~ <%= @prev_month_notices[i].endDate %></p>
+                                    <% end %>
+                                <p class="created_at">&middot; 장소 : <%= @prev_month_notices[i].address %></p>
+                                </div>
+                            </a>
+                        <% end %>
+                    </div>
+                <% else %>
+                    <% @prev_month_notices.each do |p| %>
+                        <a href="/Notice/<%=p.id %>" class="notice-box">
+                            <div class="notice-wrapper">
+                                <h4 class="notice-title"><%= p.title %></h5>
+                                <% if p.startDate == p.endDate %>
+                                    <p class="created_at">&middot; 일정 : <%= p.startDate %></p>
+                                <% else %>
+                                    <p class="created_at">&middot; 일정 : <%= p.startDate %> ~ <%= p.endDate %></p>
+                                <% end %>
+                            <p class="created_at">&middot; 장소 : <%= p.address %></p>
+                            </div>
+                        </a>
+                    <% end %>
+                <% end %>
+                <br>
+            <% else %>
+                <p style="margin-left:15px;">지난 일정이 없습니다.</p>
+            <% end %>
+        </div>
+    </div>
+</div>
+
+<style>
+    button#showMore{
+        border-radius:20px;
+        border: 1px solid #db3445;
+        background-color:transparent;
+        color:#db3445;
+        font-weight:500;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+    .page-title{
+        font-family:Jeju;
+    }
+    .content-box{
+        margin-top:60px;
+        margin-left:10px;
+    }
+    hr#title-underbar{
+       border-bottom:1px solid #eee;
+    }
+    .page-title > h2{
+        display:inline-block;
+    }
+    a#new-button{
+        font-size: 11px;
+        padding: 3px 6px;
+        float:right;
+        margin-top:30px;
+    }
+    p.notice-content{
+        overflow: hidden;
+        max-height: 80px;
+        margin-top: 1px;
+        font-size: 16px;
+        line-height: 28px;
+        color: #666;
+        vertical-align: top;
+        word-break: break-all;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 3; 
+        -webkit-box-orient: vertical;
+        margin-bottom:15px;
+    }
+    .created_at {
+        font-size:13px;
+        color:black;
+        opacity:0.8;
+        margin-left:1px;
+        margin-top:4px;
+        margin-bottom:0px;
+    }
+    h4.notice-title{
+        font-size:18px;
+        margin-top:10px;
+        padding-bottom:2px;
+        margin-left:5px;
+        font-weight: 500;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+    }
+    .notice-wrapper:hover{
+        background-color:#eee;
+    }
+    .notice-wrapper{
+        border: 1px solid #ddd;
+        padding:10px;
+        margin-bottom:10px;
+        margin-left: 14px;
+    }
+    a.notice-box, a.notice-box:hover, a.notice-box:visited, a.notice-box:active{
+        text-decoration:none;
+        color:#2d2d2d;
+    }
+    div.show-more{
+        display:none;
+    }
+    @media (max-width: 480px) {
+        .container {
+            margin-top: 20px;
+        }
+        .content-box{
+            margin-top:60px;
+            margin-left:0px;
+        }
+    }
+</style>
+<script>
+    $("button#showMore").click(function(){
+       $(".show-box").css("display","none");
+       $("div.show-more").show();
+    });
+</script>

@@ -1,0 +1,63 @@
+<div class="container">
+    <%= render "layouts/sidebar" %>
+    <div class="content-box col-md-8">
+        <div class="page-title">
+            <h2>About_us 수정</h2>
+            <hr id="title-underbar">
+        </div>
+        <br>
+        <div class="page-content">
+            <form action="/About_us/edit" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="user_id" value="<%=current_user.id %>"></input>
+                <div class="form-group">
+                    <span>* </span><label>내용</label>
+                    <textarea class="tinymce form-control" name="content" rows="20" cols="80"><%= @about.content.html_safe %></textarea>
+                    <%= tinymce :language => "ko" %>
+                </div>
+                <div class="actions">
+                    <button type="submit" class="btn btn-default">수정 완료</button>
+                </div>
+            </form>
+        </div>
+        <br><br>
+    </div>
+</div>
+
+<style>
+    div.actions{
+        text-align:right;
+    }
+    #file-input-button{
+        margin-left:10px;
+    }
+    .page-title{
+        font-family:Jeju;
+    }
+    .content-box{
+        margin-top:60px;
+        margin-left:10px;
+    }
+    hr#title-underbar{
+       border-bottom:1px solid #eee;
+    }
+    .form-control::-moz-placeholder {
+      color: #555;
+    }
+    .form-control:-ms-input-placeholder {
+      color: #555;
+    }
+    .form-control::-webkit-input-placeholder {
+      color: #555;
+    }
+    
+    form > div > span {
+        color:#db3445;
+     }
+     .mce-branding.mce-widget.mce-label.mce-flow-layout-item.mce-last{
+         color:transparent;
+     }
+     div.mce-path.mce-flow-layout-item.mce-first{
+         display:none;
+     }
+     
+</style>

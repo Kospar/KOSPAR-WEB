@@ -1,0 +1,196 @@
+<div class="container">
+    <%= render "layouts/sidebar" %>
+    <div class="content-box col-md-8">
+        <div class="page-title">
+            <h2>Notice</h2>
+            <ol class="breadcrumb">
+              <li><a href="/">Home</a></li>
+              <li><a href="/Notice" style="color:#db3445;">Notice</a></li>
+            </ol>
+        </div>
+        <hr id="title-underbar">
+        <div class="page-content">
+            <div class="notice-wrapper">
+                <div class="notice-info">
+                    <h3><%= @notice.title %></h3>
+                </div>
+                <hr id="content-split-bar">
+                <div class="notice-content">
+                    <% if @notice.startDate == @notice.endDate %>
+                        <p style="margin-bottom:10px; font-weight:500;"><span style="font-weight:700;">[일정] : </span> <%= @notice.startDate %></p><br>
+                    <% else %>
+                        <p style="margin-bottom:10px; font-weight:500;"><span style="font-weight:700;">[일정] : </span> <%= @notice.startDate %> ~ <%= @notice.endDate %></p><br>
+                    <% end %>
+                    <p style="margin-bottom:10px; font-weight:500;"><span style="font-weight:700;">[내용]</span></p>
+                    <%= @notice.content.html_safe %>
+                    <br>
+                    <% if @notice.address.present? %>
+                        <input type="hidden" value="<%= @notice.x_location %>" id="x_location" />
+                        <input type="hidden" value="<%= @notice.y_location %>" id="y_location" />
+                        <p style="margin-bottom:10px;"><span style="font-weight:700;">[장소] : </span><%= @notice.address %></p>
+                        <div class="text-center">
+                            <div id="map" style="width:100%;height:350px; margin:auto;"></div>
+                        </div>
+                    <% end %>
+                </div>
+            </div>
+            <% if user_signed_in? %>
+                <p class="button-wrapper">
+                    <a href="/Notice/<%=@notice.id %>/edit" class="btn btn-default" id="edit-button">수정</a></li>
+                    <a href="/Notice/<%=@notice.id %>/destroy" class="btn btn-default" id="delete-button" onclick="return confirm('정말로 삭제하시겠습니까? 삭제 후에는 복구가 불가능합니다.')">삭제</a></li>
+                    <a href="/Notice" class="btn btn-default" id="back-button">게시판으로</a></li>
+                </p>
+            <% else %>
+                <br>
+                <div class="text-right">
+                    <a href="/Notice" class="btn btn-default">게시판으로</a></li>
+                </div>
+            <% end %>
+            <br>
+        </div>
+        <br><br><br><br>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $('img').each(function(){
+          var $this = $(this)
+          $this.attr('src',$this.attr('src').replace('../','/'))
+         });
+    });
+</script>
+<style>
+    .upload-files > li{
+        list-style: none;
+    }
+    div.notice-content{
+        padding-left:10px;
+        margin-top:15px;
+    }
+    p.created_at{
+        padding-left:2px;
+        margin-bottom:5px;
+        font-size:13px;
+        color:black;
+    }
+    div.notice-info{
+        padding-left:10px;
+        padding-bottom:5px;
+    }
+    hr#title-underbar{
+       border-bottom:1px solid #eee;
+    }
+    div.notice-wrapper{
+        padding-bottom:28px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    hr#content-split-bar{
+        border-color:#ddd;
+        border-style: dotted;
+    }
+    hr#edit-bar{
+        margin-bottom:0;
+    }
+    a#new-button, a#edit-button, a#delete-button, a#back-button{
+        font-size: 11px;
+        padding: 3px 6px;
+    }
+    p.button-wrapper{
+        float:right;
+        display:inline-block;
+        margin-top:10px;
+    }
+    ul.edit-delete > li{
+        list-style:none;
+        display:inline-block;
+        margin-left:10px;
+        margin-right:10px;
+        color:#2d2d2d;
+        text-decoration:none;
+        font-weight:bold;
+    }
+    ul.edit-delete{
+        float:right;
+        display:inline-block;
+        text-align:right;
+        margin-top:45px;
+        margin-bottom:0;
+        padding-left:0;
+    }
+    ul.edit-delete > li> a , ul.edit-delete > li> a:hover, ul.edit-delete > li>a:visited, ul.edit-delete > li>a:active{
+        color:#2d2d2d;
+        text-decoration:none;
+    }
+    .page-title{
+        font-family:Jeju;
+    }
+    .content-box{
+        margin-top:60px;
+        margin-left:10px;
+    }
+    ol.breadcrumb{
+        background-color:transparent;
+        float:right;
+        font-size:12px;
+        padding-right:0px;
+    }
+    ol.breadcrumb li+li:before {
+        padding: 8px;
+        color: black;
+        content: ">";
+    }
+    ol.breadcrumb > li > a{
+        color:#828282;
+        text-decoration:none;
+    }
+    ol.breadcrumb li:last-child{
+        color:#db3445;
+    }
+    .breadcrumb{
+        margin-top: 27px;
+        margin-bottom:0px;
+    }
+    .page-title > h2{
+        display:inline-block;
+    }
+    
+    .dropdown-menu{
+        padding: 10px 10px;
+    }
+    @media (max-width: 480px) {
+        .content-box {
+            margin-top:0;
+            padding-top:10px;
+            margin-left: 0;
+        }
+    }
+
+</style>
+<script>
+    var x_location = document.getElementById('x_location').value
+    var y_location = document.getElementById('y_location').value
+    
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+    mapOption = { 
+        center: new daum.maps.LatLng(y_location, x_location), //지도의 중심좌표
+        level: 3 // 지도의 확대 레벨
+    };
+
+    var map = new daum.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+    // 마커가 표시될 위치입니다 
+    var markerPosition  = new daum.maps.LatLng(y_location, x_location); 
+    
+    // 마커를 생성합니다
+    var marker = new daum.maps.Marker({
+        position: markerPosition
+    });
+    
+    // 마커가 지도 위에 표시되도록 설정합니다
+    marker.setMap(map);
+    map.setZoomable(false);   
+    
+    // 아래 코드는 지도 위의 마커를 제거하는 코드입니다
+    // marker.setMap(null);    
+</script>

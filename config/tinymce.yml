@@ -1,0 +1,10 @@
+toolbar: undo redo | bold italic | uploadimage | alignleft aligncenter alignright | fontsizeselect | forecolor | link | table | codesample |
+plugins:
+  - link
+  - textcolor
+  - code
+  - table
+  - uploadimage
+  - autolink
+  - codesample
+codesample_languages: [{text: 'C', value: 'c'}, {text: 'MATLAB', value: 'matlab'}]

@@ -1,0 +1,500 @@
+<div class="container">
+    <%= render "layouts/sidebar" %>
+    <div class="content-box col-md-8">
+        <div class="page-title">
+            <h2>KOSPAR Forums</h2>
+            <ol class="breadcrumb">
+              <li><a href="/">Home</a></li>
+              <li><a href="/forums">KOSPAR Forums</a></li>
+              <li class="active"><a href="/forums/<%= @board.id %>"><%= @board.subject %></a></li>
+            </ol>
+        </div>
+        <hr id="title-underbar">
+        <div class="page-content">
+            <div class="trend-wrapper">
+                <div class="trend-info">
+                    <h3><%= @post.title %></h3>
+                    <% if @post.created_at != @post.updated_at %>
+                        <p class="created_at">작성 : <%= @post.created_at.strftime("%Y-%m-%d. %H:%M") %> | 수정 : <%= @post.created_at.strftime("%Y-%m-%d. %H:%M") %></p>
+                    <% else %>
+                        <p class="created_at">작성 : <%= @post.created_at.strftime("%Y-%m-%d. %H:%M") %></p>
+                    <% end %>
+                </div>
+                <hr id="content-split-bar">
+                <div class="text-right" style="margin-right:10px;">
+                <% if @post.files.present? %>
+                    <% @file_count = @post.files.length %>
+                    <div class="upload-files">
+                        <li class="dropdown web">
+                          <a href="#" class="dropdown-toggle" style="color:#db3445"  data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">첨부파일(<%=@file_count %>)</span></a>
+                              <ul class="dropdown-menu dropdown-menu-right" id="files-list">
+                                  <% @post.files.each_with_index do |f, index| %>
+                                    <a target="_blank" href="<%=f %>"style="color:#828282"><li><%= @post.files[index].path.split("/").last %></li></a>
+                                  <% end %>
+                              </ul>
+                        </li>
+                    </div>
+                <% end %>
+                </div>
+                <div class="trend-content">
+                    <%= @post.content.html_safe %>
+                </div>
+            </div>
+            <% if user_signed_in? %>
+                <p class="button-wrapper">
+                    <% unless @comments.present? %>
+                        <% if can? :update, @post %>
+                            <a href="/forums/<%=@board.id %>/post/<%=@post.id %>/edit" class="btn btn-default" id="edit-button">수정</a></li>
+                        <% end %>
+                    <% else %>
+                        <% if can? :update, @post %>
+                            <a href="#" class="btn btn-default" id="edit-button" onclick="return confirm('댓글이 작성된 글은 수정이 불가능합니다.')">수정</a></li>
+                        <% end %>
+                    <% end %>
+                    <% if can? :delete, @post %>
+                            <a href="/forums/<%=@board.id %>/post/<%=@post.id %>/destroy" class="btn btn-default" id="delete-button" onclick="return confirm('정말로 삭제하시겠습니까? 삭제 후에는 복구가 불가능합니다.')">삭제</a></li>
+                    <% end %>
+                    <a href="/forums" class="btn btn-default" id="back-button">게시판으로</a></li>
+                </p>
+            <% else %>
+                <br>
+                <div class="text-right">
+                    <a href="/forums" class="btn btn-default">게시판으로</a></li>
+                </div>
+            <% end %>
+            <br>
+        </div>
+        <br><br>
+        <div class="comment">
+            <% if @comments.present? %>
+                <h4>댓글<span style="color:#db3445;">(<%=@comments.length %>)</span></h3>
+            <% else %>
+                <h4>댓글<span style="color:#db3445;">(0)</span></h3>
+            <% end %>
+            <div class="comment-input">
+                <% if user_signed_in? %>
+                    <form action="/forums/<%=@board.id %>/post/<%=@post.id %>/comment_create" method="post">
+                        <input type="hidden" value="<%= current_user.id %>" name="user_id"></input>
+                        <textarea class="tinymce" id="comment-input-2" rows="15" name="content"></textarea>
+                        <div class="text-right" style="border-bottom: 1px solid #c5c5c5; border-left: 1px solid #c5c5c5; border-right: 1px solid #c5c5c5">
+                            <button type="submit" id="comment-create">작성</button>
+                        </div>
+                    </form>
+                <% else %>
+                    <p style="padding-left:2px;">댓글 작성은 로그인 후 가능합니다.</p>
+                <% end %>
+            </div>
+            <br>
+            <% if @comments.present? %>
+                <div class="comments-wrapper">
+                <% @comments.each do |c| %>
+                    <div class="comment-box">
+                        <h5 class="comment-user-info">
+                        <% if user_signed_in? %>
+                            <% if current_user.admin? %>
+                                <button class="user-info"data-toggle="modal" data-target="#myModal_<%=c.id %>"><%= c.user.nickname %></button>
+                            <% else %>
+                                <%= c.user.nickname %>
+                            <% end %>
+                        <% else %>
+                            <%= c.user.nickname %>
+                        <% end %>
+                        </h5>
+                        <% if can? :delete, c %>
+                            <a href="/forums/<%=@board.id %>/<%=@post.id %>/<%=c.id %>/destroy" class="comment-delete-btn" onclick="return confirm('정말로 삭제하시겠습니까? 삭제 후에는 복구가 불가능합니다.')">
+                                <span class="glyphicon glyphicon-remove glyphicon-light"></span>
+                            </a>
+                        <% end %>
+                        <% if can? :update, c %>
+                            <a type="button" class="comment-edit-btn" id="<%=c.id %>">
+                                <span class="glyphicon glyphicon-edit glyphicon-light"></span>
+                            </a>
+                        <% end %>
+                        <div class="comment-content"><%= c.content.html_safe %></div>
+                        <% if c.updated_at == c.created_at %>
+                            <p class="created_at"><%= c.created_at.strftime("%Y-%m-%d. %H:%M") %></p> 
+                        <% else %>
+                            <p class="created_at updated"><%= c.updated_at.strftime("%Y-%m-%d. %H:%M") %>&nbsp;(수정)</p> 
+                        <% end %>
+                    </div>
+                    <% if user_signed_in? %>
+                    <div class="comment-input comment-edit" id="edit_box_<%=c.id %>">
+                        <form action="/forums/<%=@board.id %>/post/<%=@post.id %>/comment_edit" method="post">
+                            <input type="hidden" value="<%= current_user.id %>" name="user_id"></input>
+                            <input type="hidden" value="<%= c.id %>" name="comment_id"></input>
+                            <textarea class="tinymce" id="comment-input" rows="15" name="content"><%=c.content.html_safe %></textarea>
+                            <div class="text-right" style="border-bottom: 1px solid #c5c5c5; border-left: 1px solid #c5c5c5; border-right: 1px solid #c5c5c5">
+                                <button type="submit" id="comment-create">수정</button>
+                            </div>
+                        </form> 
+                    </div>
+                    <% end %>
+                    <div id="myModal_<%=c.id %>" class="modal fade" data-backdrop="false" role="dialog">
+                      <div class="modal-dialog">
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">사용자 정보</h4>
+                          </div>
+                          <div class="modal-body">
+                            <table class="table">
+                                <tr>
+                                    <td>이메일</td>
+                                    <td><%= c.user.email %></td>
+                                </tr>
+                                <tr>
+                                    <td>이름</td>
+                                    <td><%= c.user.name %></td>
+                                </tr>
+                                <tr>
+                                    <td>닉네임</td>
+                                    <td><%= c.user.nickname %></td>
+                                </tr>
+                                <tr>
+                                    <td>회사명</td>
+                                    <td><%= c.user.company_name %> (
+                                    <% if c.user.company_private == true %>
+                                        공개
+                                    <% else %>
+                                        비공개
+                                    <% end %>
+                                    )
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>회사번호</td>
+                                    <td>
+                                        <% if c.user.company_tel_num_1 !="" %>
+                                                <%= c.user.company_tel_num_1 %>-
+                                                <%= c.user.company_tel_num_2 %>-
+                                                <%= c.user.company_tel_num_3 %>
+                                        <% else %>
+                                            회사번호 정보가 없습니다.
+                                        <% end %>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>회사주소</td>
+                                    <td>
+                                        <% if c.user.company_address != "" %>
+                                            (<%=c.user.company_address_post_num %>) <%=c.user.company_address %>
+                                            <% if c.user.company_address_details !="" %>
+                                                , <%= c.user.company_address_details %>
+                                            <% end %>
+                                            <% if c.user.company_address_extra_info !="" %>
+                                                <%= c.user.company_address_extra_info %>
+                                            <% end %>
+                                        <% else %>
+                                            회사주소 정보가 없습니다.
+                                        <% end %>
+                                    </td>
+                                </tr>
+                            </table>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                <% end %>
+                </div>
+            <% end %>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $('img').each(function(){
+          var $this = $(this)
+          $this.attr('src',$this.attr('src').replace('../','/'))
+         });
+    });
+    
+    $(".comment-edit-btn").click(function() {
+        var clickedID = this.id;
+        $("#edit_box_"+clickedID).css("display","block");
+    });
+</script>
+<style>
+    div#mceu_13{
+        box-shadow: none;
+    }
+    div#mceu_33.mce-edit-area.mce-container.mce-panel.mce-stack-layout-item{
+        border-right: 1px solid #c5c5c5 !important;
+    }
+    .comment-edit{
+        display:none;
+    }
+    a.comment-edit-btn{
+        float:right;
+        display:inline-block;
+        margin-right:7px;
+        margin-top:-3.5px;
+        color:#ddd;
+    }
+    a.comment-edit-btn:hover{
+        color:#db3445;
+    }
+    a.comment-delete-btn{
+        float:right;
+        display:inline-block;
+        margin-right:7px;
+        margin-top:-4px;
+        color:#ddd;
+    }
+    a.comment-delete-btn:hover{
+        color:#db3445;
+    }
+    button.user-info ,button.user-info:focus {
+        padding: 0;
+        border: none;
+        background: none;
+        outline: none;
+    }
+    button.user-info:hover{
+        color:#db3445;
+        text-decoration:underline;
+    }
+
+    .comment-box > p.created_at{
+        padding-left:10px;
+    }
+    div.comment-content{
+        padding-left:10px;
+        margin-top: 1px;
+        font-size: 15px;
+        line-height: 28px;
+        vertical-align: top;
+        margin-bottom:15px;
+    }
+    h5.comment-user-info{
+        padding-left:10px;
+        font-weight:700;
+        display:inline-block;
+    }
+    div.comment-box, div.comment-input.comment-edit{
+        /*min-height: 110px;*/
+        border-top: 1px solid #ddd;
+        padding-top:10px;
+        padding-bottom:10px;
+    }
+    div.comment-input.comment-edit{
+        min-height:400px;
+    }
+    div.comments-wrapper:last-child{
+        border-bottom: 1px solid #ddd;
+    }
+    div.comments-wrapper{
+        margin-bottom: 50px;
+    }
+    button#comment-create{
+        display:inline-block;
+        padding: 10px 25px;
+        background-color:#db3445;
+        color:white;
+        border:0;
+        margin-right: -3px;
+        border-radius:0;
+    }
+    iframe#comment-input_ifr{
+        height:400px !important;
+    }
+    #comment-input, #comment-input-2{
+        width:100%;
+        height: 400px;
+        border: 1px solid #ddd;
+        font-size: 15px;
+        padding: 13px 15px 10px;
+        resize:none;
+    }
+    textarea{
+        color:#828282;
+    }
+    .upload-files > li{
+        list-style: none;
+    }
+    div.trend-content{
+        padding-left:10px;
+        margin-top:30px;
+    }
+    p.created_at, p.updated_at{
+        padding-left:2px;
+        margin-bottom:0px;
+        font-size:13px;
+        color:#828282;
+        opacity:0.8;
+    }
+    div.trend-info{
+        padding-left:10px;
+        padding-bottom:5px;
+    }
+    hr#title-underbar{
+       border-bottom:1px solid #eee;
+    }
+    div.trend-wrapper{
+        padding-bottom:28px;
+        border-bottom: 1px solid #eee;
+    }
+    hr#content-split-bar{
+        border-color:#ddd;
+        border-style: dotted;
+    }
+    hr#edit-bar{
+        margin-bottom:0;
+    }
+    a#new-button, a#edit-button, a#delete-button, a#back-button{
+        font-size: 11px;
+        padding: 3px 6px;
+    }
+    p.button-wrapper{
+        float:right;
+        display:inline-block;
+        margin-top:10px;
+    }
+    ul.edit-delete > li{
+        list-style:none;
+        display:inline-block;
+        margin-left:10px;
+        margin-right:10px;
+        color:#2d2d2d;
+        text-decoration:none;
+        font-weight:bold;
+    }
+    ul.edit-delete{
+        float:right;
+        display:inline-block;
+        text-align:right;
+        margin-top:45px;
+        margin-bottom:0;
+        padding-left:0;
+    }
+    ul.edit-delete > li> a , ul.edit-delete > li> a:hover, ul.edit-delete > li>a:visited, ul.edit-delete > li>a:active{
+        color:#2d2d2d;
+        text-decoration:none;
+    }
+    .page-title{
+        font-family:Jeju;
+    }
+    .content-box{
+        margin-top:60px;
+        margin-left:10px;
+        margin-bottom:50px;
+    }
+    ol.breadcrumb{
+        background-color:transparent;
+        float:right;
+        font-size:12px;
+        padding-right:0px;
+    }
+    ol.breadcrumb li+li:before {
+        padding: 8px;
+        color: black;
+        content: ">";
+    }
+    ol.breadcrumb > li > a{
+        color:#828282;
+        text-decoration:none;
+    }
+    ol.breadcrumb li.active > a{
+        color:#db3445;
+    }
+    .breadcrumb{
+        margin-top: 27px;
+        margin-bottom:0px;
+    }
+    .page-title > h2{
+        display:inline-block;
+    }
+    
+    .dropdown-menu{
+        padding: 10px 10px;
+    }
+        .table{
+        width: 100%;
+    }
+    tr > td:nth-child(1){
+        text-align:center;
+        font-weight:bold;
+        color:#db3445;
+        border-right:1px solid #eee;
+        max-width:100px;
+    }
+    tr:last-child > td{
+        border-bottom:1px solid #eee;
+    }
+    table.table{
+        min-width:500px;
+        margin-bottom:0;
+    }
+    .modal-body{
+        padding:0;
+    }
+    .modal-dialog {
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .modal-content {
+      margin: 0 auto;
+    }
+    div.mce-statusbar.mce-container.mce-panel.mce-stack-layout-item.mce-last{
+        display:none;
+    }
+    div#mceu_15-body{
+        display:none;
+    }
+    @media (max-width: 600px) {
+        ol.breadcrumb{
+            display:none;
+        }
+    }
+    @media (max-width: 480px) {
+        .content-box {
+            margin-top:0;
+            padding-top:10px;
+            margin-left: 0;
+        }
+        a.comment-edit-btn{
+            display:none;   
+        }
+        #comment-input{
+            width:100%;
+            height: 80px;
+            border: 1px solid #ddd;
+            font-size: 15px;
+            padding: 13px 15px 10px;
+            resize:none;
+        }
+        iframe#comment-input-2_ifr{
+            height:80px !important;
+        }
+    }
+</style>
+<style>
+    @media (max-width: 480px){
+        .content-box {
+            margin-top:0;
+            padding-top:10px;
+            margin-left: 0;
+            margin-bottom:50px;
+        }
+        div.trend-content {
+            padding-left: 0px;
+            margin-top: 15px;
+        }
+        div.trend-info {
+            padding-left: 2px;
+        }
+        img{
+            max-width:100%;
+            height:auto;
+            display:block;
+            margin: auto;
+            margin-bottom:10px;
+        }
+    }
+</style>

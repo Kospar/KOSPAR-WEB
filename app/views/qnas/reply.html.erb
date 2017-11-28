@@ -1,0 +1,74 @@
+<div class="container">
+    <%= render "layouts/sidebar" %>
+    <div class="content-box col-md-9">
+        <div class="page-title">
+            <h2>답변 작성</h2>
+            <hr id="title-underbar">
+        </div>
+        <br>
+        <div class="page-content">
+            <form action="/Q&A/<%=@qna.id %>/reply" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="user_id" value="<%=current_user.id %>"></input>
+                <input type="hidden" name="qna_id" value="<%=@qna.id %>"></input>
+                <div class="form-group">
+                    <span>* </span><label>답변 제목</label>
+                    <input type="text" class="form-control" placeholder="제목을 입력해주세요." name="title"></input>
+                </div>
+                <div class="form-group">
+                    <span>* </span><label>답변 내용</label>
+                    <textarea class="form-control" name="content" rows="10" placeholder="내용을 입력해주세요."></textarea>
+                </div>
+                <div class="form-group">
+                    <span>* </span><label>이미지 첨부</label><em> (이미지 첨부는 한장만 가능합니다.)</em>
+                    <input type="file" name="image" id="image-input-button"></input>
+                </div>
+                <div class="actions">
+                    <button type="submit" class="btn btn-default">답변 완료</button>
+                </div>
+            </form>
+        </div>
+        <br>
+    </div>
+</div>
+
+<style>
+    div.actions{
+        text-align:right;
+    }
+    #image-input-button{
+        margin-left:10px;
+    }
+    .page-title{
+        font-family:Jeju;
+    }
+    .content-box{
+        margin-top:60px;
+        margin-left:10px;
+    }
+    hr#title-underbar{
+       border-bottom:1px solid #eee;
+    }
+    .form-control::-moz-placeholder {
+      color: #555;
+    }
+    .form-control:-ms-input-placeholder {
+      color: #555;
+    }
+    .form-control::-webkit-input-placeholder {
+      color: #555;
+    }
+    
+    form > div > span {
+        color:#db3445;
+     }
+     @media (max-width: 480px) {
+        .content-box {
+            margin-top:0;
+            padding-top:10px;
+            margin-left: 0;
+        }
+        em{
+            font-size:12px;
+        }
+    }
+</style>

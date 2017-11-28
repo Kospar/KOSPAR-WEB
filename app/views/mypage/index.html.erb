@@ -1,0 +1,643 @@
+<div class="container">
+    <%= render "layouts/sidebar" %>
+    <div class="content-box col-md-8">
+        <div class="page-title">
+            <h2>My page</h2>
+            <hr id="title-underbar">
+        </div>
+        <div class="my-info">
+            <h3>&middot; 회원 정보</h3>
+            <a href="/users/edit" class="btn btn-default">수정 | 탈퇴</a>
+            <table class="table">
+                <tr>
+                    <td>이메일</td>
+                    <td><%= current_user.email %></td>
+                </tr>
+                <tr>
+                    <td>이름</td>
+                    <td><%= current_user.name %></td>
+                </tr>
+                <tr>
+                    <td>닉네임</td>
+                    <td><%= current_user.nickname %></td>
+                </tr>
+                <tr>
+                    <td>회사명</td>
+                    <td><%= current_user.company_name %> (
+                    <% if current_user.company_private == true %>
+                        공개
+                    <% else %>
+                        비공개
+                    <% end %>
+                    )
+                    </td>
+                </tr>
+                <tr>
+                    <td>회사번호</td>
+                    <td>
+                        <% if current_user.company_tel_num_1 !="" %>
+                                <%= current_user.company_tel_num_1 %>-
+                                <%= current_user.company_tel_num_2 %>-
+                                <%= current_user.company_tel_num_3 %>
+                        <% else %>
+                            회사번호 정보가 없습니다.
+                        <% end %>
+                    </td>
+                </tr>
+                <tr>
+                    <td>회사주소</td>
+                    <td>
+                        <% if current_user.company_address != "" %>
+                            (<%=current_user.company_address_post_num %>) <%=current_user.company_address %>
+                            <% if current_user.company_address_details !="" %>
+                                , <%= current_user.company_address_details %>
+                            <% end %>
+                            <% if current_user.company_address_extra_info !="" %>
+                                <%= current_user.company_address_extra_info %>
+                            <% end %>
+                        <% else %>
+                            회사주소 정보가 없습니다.
+                        <% end %>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <hr>
+        <h3 style="margin-bottom:20px;">&middot; 내글 보기</h3>
+         <div class="form-group" style="margin-left:10px;">
+            <select class="form-control" onchange="location = this.value;">
+                <option idn"undefined" value="/mypage?table=">게시판을 선택해주세요</option>
+                <option id="Qna" value=/mypage?table=Qna>Q & A</option>
+                <option id="Forums" value=/mypage?table=Forums>KOSPAR Forums</option>
+             </select>
+        </div>
+        <div class="web-size">
+            <% if @qnas.present? %>
+            <table class="table web-table" id="Qna">
+                <thead>
+                    <tr>
+                        <th>분류</th>
+                        <th>답변</th>
+                        <th>제목</th>
+                        <th>등록일</th>
+                        <th>링크</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% @qnas.each do |q| %>
+                        <tr>
+                            <td>질문</td>
+                            <% if q.answer != "" and q.answer == true %>
+                                <td><span style="color:#022e82">[답변완료]</span></span></td>
+                            <% else %>
+                                <td><span style="color:#db3445;">[답변대기]</span></span></td>
+                            <% end %>
+                            <td><span style="color:black;"><%= q.title %></span></td>
+                            <td><%= q.created_at.strftime('%Y-%m-%d') %></td>
+                            <td><a href="/Q&A/show/<%=q.id %>" class="btn btn-default btn-xs">바로가기</a></td>
+                        </tr>
+                    <% end %>
+                </tbody>
+            </table>
+            <div class="text-center" id="pagination-Qna">
+                <%= will_paginate @qnas, renderer: BootstrapPagination::Rails, :previous_label => t("<<"), :next_label => t(">>"), :inner_window => 3, :outer_window => 0 %>
+            </div>
+            <% else %>
+                <p>작성하신 글이 없습니다.</p>
+            <% end %>
+        </div>
+        <div class="mobile-size">
+            <% if @qnas.present? %>
+            <table class="table mobile-table" id="Qna">
+                <thead>
+                    <tr>
+                        <th>질문</th>
+                        <th>링크</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% @qnas.each do |q| %>
+                        <tr>
+                            <% if q.answer != "" and q.answer == true %>
+                                <td><span style="color:#022e82">[답변완료] </span><span style="color:black;"><%= q.title %></span></td>
+                            <% else %>
+                                <td><span style="color:#db3445">[답변대기] </span><span style="color:black;"><%= q.title %></span></td>
+                            <% end %>
+                            <td><a href="/Q&A/show/<%=q.id %>" class="btn btn-default btn-xs">바로가기</a></td>
+                        </tr>
+                    <% end %>
+                </tbody>
+            </table>
+            <div class="text-center" id="pagination-Qna">
+                <%= will_paginate @qnas, renderer: BootstrapPagination::Rails, :previous_label => t("<<"), :next_label => t(">>"), :inner_window => 0, :outer_window => 0 %>
+            </div>
+            <% else %>
+                <p>작성하신 글이 없습니다.</p>
+            <% end %>
+        </div>
+        <div class="web-size">
+            <% if @forums.present? %>
+                <table class="table web-table" id="Forums">
+                    <thead>
+                        <tr>
+                            <th>Forum</th>
+                            <th>제목</th>
+                            <th>등록일</th>
+                            <th>링크</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% @forums.each do |f| %>
+                            <tr>
+                                <td><%= ForumBoard.find(f.forum_board_id).subject %></td>
+                                <td><span style="color:black;"><%= f.title %></span></td>
+                                <td><%= f.created_at.strftime('%Y-%m-%d') %></td>
+                                <td><a href="/forums/<%=f.forum_board_id %>/post/<%=f.id %>" class="btn btn-default btn-xs">바로가기</a></td>
+                            </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+                <div class="text-center" id="pagination-Forums">
+                    <%= will_paginate @forums, renderer: BootstrapPagination::Rails, :previous_label => t("<<"), :next_label => t(">>"), :inner_window => 3, :outer_window => 0 %>
+                </div>
+            <% else %>
+                <p>작성하신 글이 없습니다.</p>
+            <% end %>
+        </div>
+        <div class="mobile-size">
+            <% if @forums.present? %>
+                <table class="table mobile-table" id="Forums">
+                    <thead>
+                        <tr>
+                            <th>제목</th>
+                            <th>링크</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% @forums.each do |f| %>
+                            <tr>
+                                <td><span style="color:black;"><%= f.title %></span></td>
+                                <td><a href="/forums/<%=f.forum_board_id %>/post/<%=f.id %>" class="btn btn-default btn-xs">바로가기</a></td>
+                            </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+                <div class="text-center" id="pagination-Forums">
+                    <%= will_paginate @forums, renderer: BootstrapPagination::Rails, :previous_label => t("<<"), :next_label => t(">>"), :inner_window => 0, :outer_window => 0 %>
+                </div>
+            <% else %>
+                <p>작성하신 글이 없습니다.</p>
+            <% end %>
+        </div>
+        <hr>
+        <h3 style="margin-bottom:20px;">&middot; 내 댓글 보기</h3>
+         <div class="form-group" style="margin-left:10px;">
+            <select class="form-control" onchange="location = this.value;">
+                <option idn"undefined" value="/mypage?table=">게시판을 선택해주세요</option>
+                <option id="DesignDocuments" value=/mypage?table=DesignDocuments>Design Documents</option>
+                <option id="OpenSources" value=/mypage?table=OpenSources>Open Sources</option>
+                <option id="ForumComments" value=/mypage?table=ForumComments>KOSPAR Forums</option>
+             </select>
+        </div>
+        <div class="web-size">
+            <% if @doc_comments.present? %>
+                <table class="table web-table" id="DesignDocuments">
+                    <thead>
+                        <tr>
+                            <th>분류</th>
+                            <th>내용</th>
+                            <th>작성일</th>
+                            <th>링크</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                         <% @doc_comments.each do |dc| %>
+                            <tr>
+                                <td>댓글</td>
+                                <td><span style="color:black;"><%= dc.content %></span></td>
+                                <td><%= dc.created_at.strftime('%Y-%m-%d') %></td>
+                                <td><a href="/Design_documents/show/<%=dc.design_document_id %>" class="btn btn-default btn-xs">바로가기</a></td>
+                            </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+                <div class="text-center" id="pagination-DesignDocuments">
+                    <%= will_paginate @doc_comments, renderer: BootstrapPagination::Rails, :previous_label => t("<<"), :next_label => t(">>"), :inner_window => 3, :outer_window => 0 %>
+                </div>
+            <% else %>
+                <p>작성하신 댓글이 없습니다.</p>
+            <% end %>
+        </div>
+        <div class="mobile-size">
+            <% if @doc_comments.present? %>
+                <table class="table mobile-table" id="DesignDocuments">
+                    <thead>
+                        <tr>
+                            <th>댓글</th>
+                            <th>링크</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                         <% @doc_comments.each do |dc| %>
+                            <tr>
+                                <td><span style="color:black;"><%= dc.content %></span></td>
+                                <td><a href="/Design_documents/show/<%=dc.design_document_id %>" class="btn btn-default btn-xs">바로가기</a></td>
+                            </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+                <div class="text-center" id="pagination-DesignDocuments">
+                    <%= will_paginate @doc_comments, renderer: BootstrapPagination::Rails, :previous_label => t("<<"), :next_label => t(">>"), :inner_window => 0, :outer_window => 0 %>
+                </div>
+            <% else %>
+                <p>작성하신 댓글이 없습니다.</p>
+            <% end %>
+        </div>
+        <div class="web-size">
+            <% if @open_comments.present? %>
+                <table class="table web-table" id="OpenSources">
+                    <thead>
+                        <tr>
+                            <th>분류</th>
+                            <th>내용</th>
+                            <th>작성일</th>
+                            <th>링크</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                         <% @open_comments.each do |oc| %>
+                            <tr>
+                                <td>댓글</td>
+                                <td><span style="color:black;"><%= oc.content %></span></td>
+                                <td><%= oc.created_at.strftime('%Y-%m-%d') %></td>
+                                <td><a href="/Opensrcs/show/<%=oc.opensrc_id %>" class="btn btn-default btn-xs">바로가기</a></td>
+                            </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+                <div class="text-center" id="pagination-OpenSources">
+                    <%= will_paginate @open_comments, renderer: BootstrapPagination::Rails, :previous_label => t("<<"), :next_label => t(">>"), :inner_window => 3, :outer_window => 0 %>
+                </div>
+            <% else %>
+                <p>작성하신 댓글이 없습니다.</p>
+            <% end %>
+        </div>
+        <div class="mobile-size">
+            <% if @open_comments.present? %>
+                <table class="table mobile-table" id="OpenSources">
+                    <thead>
+                        <tr>
+                            <th>댓글</th>
+                            <th>링크</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                         <% @open_comments.each do |oc| %>
+                            <tr>
+                                <td><span style="color:black;"><%= oc.content %></span></td>
+                                <td><a href="/Opensrcs/show/<%=oc.opensrc_id %>" class="btn btn-default btn-xs">바로가기</a></td>
+                            </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+                <div class="text-center" id="pagination-OpenSources">
+                    <%= will_paginate @open_comments, renderer: BootstrapPagination::Rails, :previous_label => t("<<"), :next_label => t(">>"), :inner_window => 0, :outer_window => 0 %>
+                </div>
+            <% else %>
+                <p>작성하신 댓글이 없습니다.</p>
+            <% end %>
+        </div>
+        <div class="web-size">
+            <% if @forum_comments.present? %>
+                <table class="table web-table" id="ForumComments">
+                    <thead>
+                        <tr>
+                            <th>Forum</th>
+                            <th>내용</th>
+                            <th>등록일</th>
+                            <th>링크</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                         <% @forum_comments.each do |fc| %>
+                            <tr>
+                                <td><%=ForumBoard.find(ForumPost.find(fc.forum_post_id).forum_board_id).subject %></td>
+                                <td><span style="color:black;"><%= strip_tags(fc.content).strip %></span></td>
+                                <td><%= fc.created_at.strftime('%Y-%m-%d') %></td>
+                                <td><a href="/forums/<%= ForumBoard.find(ForumPost.find(fc.forum_post_id).forum_board_id).id %>/post/<%=fc.forum_post_id %>" class="btn btn-default btn-xs">바로가기</a></td>
+                            </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+                <div class="text-center" id="pagination-ForumComments">
+                    <%= will_paginate @forum_comments, renderer: BootstrapPagination::Rails, :previous_label => t("<<"), :next_label => t(">>"), :inner_window => 3, :outer_window => 0 %>
+                </div>
+            <% else %>
+                <p>작성하신 댓글이 없습니다.</p>
+            <% end %>
+        </div>
+        <div class="mobile-size">
+            <% if @forum_comments.present? %>
+                <table class="table mobile-table" id="ForumComments">
+                    <thead>
+                        <tr>
+                            <th>내용</th>
+                            <th>링크</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                         <% @forum_comments.each do |fc| %>
+                            <tr>
+                                <td><span style="color:black;"><%= strip_tags(fc.content).strip %></span></td>
+                                <td><a href="/forums/<%= ForumBoard.find(ForumPost.find(fc.forum_post_id).forum_board_id).id %>/post/<%=fc.forum_post_id %>" class="btn btn-default btn-xs">바로가기</a></td>
+                            </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+                <div class="text-center" id="pagination-ForumComments">
+                    <%= will_paginate @forum_comments, renderer: BootstrapPagination::Rails, :previous_label => t("<<"), :next_label => t(">>"), :inner_window => 0, :outer_window => 0 %>
+                </div>
+            <% else %>
+                <p>작성하신 댓글이 없습니다.</p>
+            <% end %>
+        </div>
+        <hr>
+    </div>
+</div>
+
+<style>
+    div > p{
+        padding:10px;
+    } 
+    ul.pagination.pagination > li > a{
+        color:#db3445;
+    }
+    ul.pagination.pagination > li > a > span{
+        color:#777;
+    }
+    ul.pagination.pagination > li.active > span{
+        background-color:#db3445;
+        border-color:#db3445;
+    }
+    .my-info a{
+        float:right;
+        margin-top: -30px;
+        font-size: 11px;
+        padding: 3px 6px;
+        margin-right: 10px;
+    }
+    a, a:hover, a:active, a:visited{
+        text-decoration:none;
+        color:black;
+    }
+    .page-title{
+        font-family:Jeju;
+    }
+    .my-info h3{
+        margin-top:30px;
+        margin-bottom:20px;
+    }
+    .content-box{
+        margin-top:60px;
+        margin-left:10px;
+    }
+    hr#title-underbar{
+       border-bottom:1px solid #eee;
+    }
+    table{
+        margin-left:10px;
+    }
+    .table{
+        width: 97%;
+    }
+    tr > td:nth-child(1){
+        text-align:center;
+        min-width:65px;
+        font-weight:bold;
+        color:#db3445;
+        border-right:1px solid #eee;
+    }
+    tr:last-child > td{
+        border-bottom:1px solid #eee;
+    }
+    @media (max-width: 480px) {
+        .content-box {
+            margin-top:0;
+            padding-top:10px;
+            margin-left: 0;
+        }
+        .my-info a {
+            margin-right:0;
+        }
+    }
+    table#DesignDocuments > tbody > tr > td:nth-child(1){
+        color:black;
+        font-weight:600;
+        min-width:50px;
+        max-width:50px;
+        width:5%;
+    }
+    table#DesignDocuments.mobile-table > tbody > tr > td:nth-child(1){
+        color:black;
+        font-weight:normal;
+        width:90%;
+    }
+    table#DesignDocuments.mobile-table > tbody > tr > td:nth-child(2){
+        min-width:70px;
+        width:10%;
+    }
+    table#DesignDocuments > tbody > tr > td:nth-child(2){
+        text-align:center;
+    }
+   
+    table#DesignDocuments > tbody > tr > td:nth-child(3){
+        width:15%;
+        border-left:1px solid #eee;
+        border-right:1px solid #eee;
+    }
+    table#DesignDocuments > tbody > tr > td:nth-child(4){
+        width:10%;
+    }
+    table#DesignDocuments > tbody > tr > td{
+        text-align:center;
+    }
+    table#DesignDocuments > thead > tr > th{
+        text-align:center;
+    }
+    table#OpenSources > tbody > tr > td:nth-child(1){
+        color:black;
+        font-weight:600;
+        min-width:50px;
+        max-width:50px;
+        width:5%;
+    }
+    table#OpenSources.mobile-table > tbody > tr > td:nth-child(1){
+        color:black;
+        font-weight:normal;
+        width:90%;
+    }
+    table#OpenSources.mobile-table > tbody > tr > td:nth-child(2){
+        min-width:70px;
+        width:10%;
+    }
+
+    table#OpenSources > tbody > tr > td:nth-child(2){
+        text-align:center;
+    }
+    table#OpenSources > tbody > tr > td:nth-child(3){
+        width:15%;
+        border-left:1px solid #eee;
+        border-right:1px solid #eee;
+    }
+    table#OpenSources > tbody > tr > td:nth-child(4){
+        width:10%;
+    }
+    table#OpenSources > tbody > tr > td{
+        text-align:center;
+    }
+    table#OpenSources > thead > tr > th{
+        text-align:center;
+    }
+    table#Qna > tbody > tr > td:nth-child(1){
+        color:black;
+        font-weight:600;
+        min-width:50px;
+        max-width:50px;
+        width:5%;
+    }
+    table#Qna > tbody > tr > td:nth-child(2){
+        min-width:50px;
+        max-width:50px;
+        width:13%;
+        border-right:1px solid #eee;
+    }
+    table#Qna.mobile-table > tbody > tr > td:nth-child(1){
+        color:black;
+        font-weight:normal;
+        width:90%;
+    }
+    table#Qna.mobile-table > tbody > tr > td:nth-child(2){
+        min-width:70px;
+        width:10%;
+        border-right:0;
+    }
+    table#Qna > tbody > tr > td:nth-child(4){
+        width:15%;
+        border-left:1px solid #eee;
+        border-right:1px solid #eee;
+    }
+    table#Qna > tbody > tr > td:nth-child(5){
+        width:10%;
+    }
+    table#Qna > tbody > tr > td{
+        text-align:center;
+    }
+    table#Qna > thead > tr > th{
+        text-align:center;
+    }
+    table#Forums > tbody > tr > td:nth-child(1){
+        color:black;
+        font-weight:600;
+        width:15%;
+        word-break: normal;
+    }
+    table#Forums > tbody > tr > td:nth-child(3){
+        width:15%;
+        border-left:1px solid #eee;
+        border-right:1px solid #eee;
+    }
+    table#Forums > tbody > tr > td:nth-child(4){
+        width:10%;
+    }
+    table#Forums > tbody > tr > td{
+        text-align:center;
+    }
+    table#Forums > thead > tr > th{
+        text-align:center;
+    }
+    table#Forums.mobile-table > tbody > tr > td:nth-child(1){
+        color:black;
+        font-weight:normal;
+        width:90%;
+    }
+    table#Forums.mobile-table > tbody > tr > td:nth-child(2){
+        min-width:70px;
+        width:10%;
+        border-right:0;
+    }
+    table#ForumComments > tbody > tr > td:nth-child(1){
+        color:black;
+        font-weight:600;
+        width:15%;
+        word-break: normal;
+    }
+    table#ForumComments > tbody > tr > td:nth-child(3){
+        width:15%;
+        border-left:1px solid #eee;
+        border-right:1px solid #eee;
+    }
+    table#ForumComments > tbody > tr > td:nth-child(4){
+        width:10%;
+    }
+    table#ForumComments > tbody > tr > td{
+        text-align:center;
+    }
+    table#ForumComments > thead > tr > th{
+        text-align:center;
+    }
+    table#ForumComments.mobile-table > tbody > tr > td:nth-child(1){
+        color:black;
+        font-weight:normal;
+        width:90%;
+    }
+    table#ForumComments.mobile-table > tbody > tr > td:nth-child(2){
+        min-width:70px;
+        width:10%;
+        border-right:0;
+    }
+    table#Forums, table#DesignDocuments, table#OpenSources, table#Qna, table#ForumComments{
+        display:none;
+    }
+    div#pagination-Forums, div#pagination-DesignDocuments, div#pagination-OpenSources, div#pagination-Qna, div#pagination-ForumComments{
+        display:none;
+    }
+    @media (max-width: 700px) {
+        div.web-size{
+            display:none;
+        }
+    }
+    @media (min-width: 700px) {
+        div.mobile-size{
+            display:none;
+        }
+    }
+</style>
+
+<script>
+    var url = window.location.href;
+    var split = url.split("table=")[1];
+    
+    if(split == undefined){
+        $("option#undefined").setAttribute('selected', true);
+    }else if(split == "DesignDocuments"){
+        $("table#DesignDocuments").css("display", "table");
+        $("div#pagination-DesignDocuments").css("display", "block");
+        $("option#DesignDocuments").attr("selected", true);
+    }else if(split == "OpenSources"){
+        $("table#OpenSources").css("display", "table");
+        $("div#pagination-OpenSources").css("display", "block");
+        $("option#OpenSources").attr("selected", true);
+    }else if(split == "Qna"){
+        $("table#Qna").css("display", "table");
+        $("div#pagination-Qna").css("display", "block");
+        $("option#Qna").attr("selected", true);
+    }else if(split == "Forums"){
+        $("table#Forums").css("display", "table");
+        $("div#pagination-Forums").css("display", "block");
+        $("option#Forums").attr("selected", true);
+    }else if(split == "ForumComments"){
+        $("table#ForumComments").css("display", "table");
+        $("div#pagination-ForumComments").css("display", "block");
+        $("option#ForumComments").attr("selected", true);
+    }
+</script>

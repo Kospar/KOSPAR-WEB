@@ -1,0 +1,192 @@
+<script src="https://spi.maps.daum.net/imap/map_js_init/postcode.v2.js"></script>
+<div class="container">
+  <div class="sign_up wrapper col-md-offset-2 col-md-8 content-box">
+    <div class="page-title">
+      <h2>회원가입</h2>
+      <hr id="title-underbar">
+    </div>
+    <button id="postcodify_search_button" onclick="sample6_execDaumPostcode()" class="btn btn-default">검색</button><br />
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+      <%= devise_error_messages! %>
+      <h4>필수 입력 정보</h4>
+      <div class="form-group">
+        <span>* </span><%= f.label "e-mail" %><br />
+        <%= f.email_field :email, autofocus: true, :class =>"form-control", :placeholder => "로그인시 사용할 e-mail 입력" %>
+      </div>
+      <div class="form-group">
+        <span>* </span><%= f.label "이름" %><br />
+        <%= f.text_field :name, autofocus: true, :class =>"form-control" , :placeholder => "본인 실명 입력" %>
+      </div>
+      <div class="form-group">
+        <span>* </span><%= f.label "닉네임" %><br />
+        <%= f.text_field :nickname, autofocus: true, :class =>"form-control", :placeholder => "게시판 이용시 사용할 닉네임 입력"%>
+      </div>
+      <div class="form-group">
+        <span>* </span><%= f.label "비밀번호" %>
+        <em>(영문 + 숫자 8자 이상)</em><br />
+        <%= f.password_field :password, autocomplete: "off", :class =>"form-control" %>
+      </div>
+      <div class="form-group">
+        <span>* </span><%= f.label "비밀번호 확인" %><br />
+        <%= f.password_field :password_confirmation, autocomplete: "off", :class =>"form-control" %>
+      </div>
+      <hr>
+      <h4>부가 입력 정보</h4>
+      <div class="form-group">
+        <%= f.label "회사명" %><br />
+        <%= f.text_field :company_name, autofocus: true, :class =>"form-control", :style =>"margin-bottom:20px;" %>
+        <br><%= f.label "회사명 공개" %>&nbsp;&nbsp;&nbsp;&nbsp;<%= f.check_box :company_private %>
+      </div>
+      <div class="form-group" id="address-group">
+        <%= f.label "회사 주소", :style => "margin-bottom:10px;" %><br />
+        <%= f.text_field :company_address_post_num, :id =>"sample6_postcode", :class => "form-control", :placeholder => "우편번호" %>
+        <%= f.text_field :company_address, :id =>"sample6_address", :class => "form-control", :placeholder => "주소" %>
+        <%= f.text_field :company_address_details, :id =>"sample6_address2", :class => "form-control" ,:placeholder => "상세주소를 입력해주세요."%>
+      </div>
+      <div class="form-group" id="tel_num-group">
+        <%= f.label "회사 전화번호" %><br />
+        <%= f.text_field :company_tel_num_1, :class =>"form-control" %> -
+        <%= f.text_field :company_tel_num_2, :class =>"form-control" %> -
+        <%= f.text_field :company_tel_num_3, :class =>"form-control" %>
+      </div>
+      <hr>
+      <div class="actions">
+        <%= f.submit "회원가입", :class =>"btn btn-default" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+  h2{
+    font-family: Jeju;
+  }
+  label{
+    font-family: Jeju;
+  }
+  .page-title{
+      font-family:Jeju;
+  }
+  .content-box{
+      margin-top:30px;
+      padding-top:10px;
+  }
+  hr#title-underbar, hr{
+     border-bottom:1px solid #eee;
+  }
+  input#user_email, #user_name, #user_nickname, #user_password, #user_password_confirmation, #user_company_name{
+    width:300px;
+  }
+  input#user_company_name{
+    display:inline-block;
+  }
+  #error_explanation{
+    background-color: #eee;
+  }
+  .form-group{
+    margin-left:20px;
+  }
+  h4 {
+    font-weight:700;
+    color: #db3445;
+  }
+  form > div > span {
+    color:#db3445;
+  }
+  #address-group input{
+    margin-bottom:5px;
+  }
+  #tel_num-group input{
+    width:100px;
+    display:inline-block;
+  }
+  button#postcodify_search_button{
+    position:absolute;
+    top:67%;
+    right:15px;
+    font-size: 11px;
+    padding: 3px 6px;
+  }
+  .actions{
+    text-align:right;
+    margin-bottom:30px;
+  }
+  div.postcodify_popup_layer.fill_vertically {
+    height: 92% !important;
+    top: 0;
+    margin-top: 3% !important;
+    border-radius: 0;
+  }
+  form{
+    margin-top:-30px;
+  }
+  @media (max-width: 1000px) {
+    button#postcodify_search_button {
+      top: 69%;
+    }
+  }
+  @media (max-width: 480px) {
+    button#postcodify_search_button {
+      top: 69%;
+    }
+    .content-box {
+      margin-top: 0; 
+      padding-top: 10px;
+    }
+  }
+  @media (max-width: 375px) {
+    button#postcodify_search_button {
+      top: 67%;
+    }
+    .content-box {
+      margin-top: 0; 
+      padding-top: 10px;
+    }
+  }
+
+</style>
+
+<script src="https://spi.maps.daum.net/imap/map_js_init/postcode.v2.js"></script>
+<script>
+    function sample6_execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                var fullAddr = ''; // 최종 주소 변수
+                var extraAddr = ''; // 조합형 주소 변수
+
+                // 사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                    fullAddr = data.roadAddress;
+
+                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                    fullAddr = data.jibunAddress;
+                }
+
+                // 사용자가 선택한 주소가 도로명 타입일때 조합한다.
+                if(data.userSelectedType === 'R'){
+                    //법정동명이 있을 경우 추가한다.
+                    if(data.bname !== ''){
+                        extraAddr += data.bname;
+                    }
+                    // 건물명이 있을 경우 추가한다.
+                    if(data.buildingName !== ''){
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    // 조합형주소의 유무에 따라 양쪽에 괄호를 추가하여 최종 주소를 만든다.
+                    fullAddr += (extraAddr !== '' ? ' ('+ extraAddr +')' : '');
+                }
+
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById('sample6_postcode').value = data.zonecode; //5자리 새우편번호 사용
+                document.getElementById('sample6_address').value = fullAddr;
+
+                // 커서를 상세주소 필드로 이동한다.
+                document.getElementById('sample6_address2').focus();
+            }
+        }).open();
+    }
+</script>

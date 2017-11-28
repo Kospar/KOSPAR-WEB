@@ -1,0 +1,158 @@
+<div class="container">
+    <%= render "layouts/sidebar" %>
+    <div class="content-box col-md-8">
+        <div class="page-title">
+            <h2 style="margin-bottom:0; display:inline-block;">KOSPAR Forums</h2>
+            <% if user_signed_in? %>
+                <p class="new-button-wrapper">
+                    <a href="/forums/new" class="btn btn-default" id="new-button">새글 작성</a>
+                </p>
+            <% else %>
+                <p class="new-button-wrapper">
+                    <a href="/users/sign_in" class="btn btn-default" id="new-button">새글 작성</a>
+                </p>
+            <% end %>
+            <hr id="title-underbar">
+        </div>
+        <br>
+        <div class="notice-board" style="margin-bottom:20px;">
+            <p style="border:1px solid #ddd; margin-bottom:0; border-bottom:0; background-color:#eee; padding:2px;">
+                <i class="fa fa-info-circle" aria-hidden="true" style="font-size:20px; color:#db3445; margin-left:15px;"></i>
+                <span style="margin-left:5px;font-size:20px; color:#5c5c5c">Notice</span>
+            </p>
+            <div class="notice-content" style="min-height:70px; border: 1px solid #ddd; margin-bottom:10px;">
+                <ul style="margin-top:12px; margin-bottom:10px; letter-spacing: 1px;">
+                    <li style="margin-bottom:5px;">KOSPAR Forums에서는 Autosar 관련 주제를 자유롭게 토론하실 수 있습니다.</li>
+                    <li style="margin-bottom:5px;">현재 페이지에서는 게시판 별 최신글 5개까지만 보여집니다.</li>
+                    <li style="margin-bottom:5px;">전체 글은 해당 게시판에서 볼 수 있습니다.</li>
+                    <li style="margin-bottom:5px;">광고성 글은 게시 즉시 삭제 됩니다.</li>
+                </ul>
+            </div>
+        </div>
+        <div class="page-content" style="text-align:center;">
+            <% if @boards.present? %>
+                <% @boards.each do |b| %>
+                    <table class="board table">
+                        <thead>
+                            <tr>
+                                <th><%= b.subject %><span style="float:right;"><a href="/forums/board/<%=b.id %>">바로가기 ></a></span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if b.forum_posts.present? %>
+                                <% if b.forum_posts.length <= 5 %>
+                                    <% b.forum_posts.each do |p| %>
+                                        <tr>
+                                            <td><span style="margin-left: 10px; margin-right:10px; color:#db3445;">></span>
+                                                <a href="/forums/<%=b.id%>/post/<%=p.id%>"><%=p.title %></a>
+                                            </td>
+                                        </tr>
+                                    <% end %>
+                                <% else %>
+                                    <% for i in 0..4 %>
+                                        <tr>
+                                            <td><span style="margin-left: 10px; margin-right:10px; color:#db3445;">></span>
+                                                <a href="/forums/<%=b.id%>/post/<%=b.forum_posts[i].id%>"><%=b.forum_posts[i].title %></a>
+                                            </td>
+                                        </tr>
+                                    <% end %>
+                                <% end %>
+                            <% else %>
+                            <% end %>
+                        </tbody>
+                    </table>
+                <% end %>
+            <% end %>
+        </div>
+        <br><br>
+    </div>
+</div>
+
+<style>
+    
+    hr#title-underbar{
+       border-bottom:1px solid #eee;
+       margin-bottom:0px;
+    }
+
+    a#new-button{
+        font-size: 11px;
+        padding: 3px 6px;
+        margin-top:25px;
+    }
+    p.new-button-wrapper{
+        float:right;
+    }
+    .page-title{
+        font-family:Jeju;
+    }
+    .content-box{
+        margin-top:60px;
+        margin-left:10px;
+    }
+    .table{
+        vertical-align:middle;
+    }
+    .table > thead > tr > th > span >  a{
+        color:#db3445;
+        font-size : 12px;
+        font-weight:500;
+    }
+    thead > tr > th{
+        text-align:left;
+        font-weight:700;
+        font-size:20px;
+        color:#db3445;
+    }
+    .table > tbody > tr > td{
+        padding-top:10px;
+        padding-bottom:10px;
+        border-top:1px solid #eee;
+    }
+    .table > tbody > tr > td > a{
+        color:black;
+    }
+    .table > tbody > tr > td:hover{
+        background-color:#eee;
+    }
+    tbody > tr > td:nth-child(1){
+        width:65px;
+        text-align:left;
+    }
+    table > tbody > tr:last-child > td {
+        border-bottom:1px solid #eee;
+    }
+    .table > thead > tr > th{
+        border-bottom:1px solid #eee;
+    }
+    thead{
+        border-top:2px solid #eee;
+    }
+    @media (max-width: 480px) {
+        .content-box {
+            margin-top:0;
+            padding-top:10px;
+            margin-left: 0;
+        }
+    }
+    @media (max-width: 360px) {
+        .notice-content > ul > li{
+            font-size:12px;
+        }
+        .notice-content > ul{
+            padding-left:40px;
+        }
+        
+    }
+    @media (max-width: 320px) {
+        h2{
+            font-size:25px;
+        }
+        .notice-content > ul > li{
+            font-size:10px;
+        }
+        .notice-content > ul{
+            padding-left:25px;
+        }
+    }
+</style>

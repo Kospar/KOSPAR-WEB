@@ -1,0 +1,113 @@
+<div class="container">
+    <%= render "layouts/sidebar" %>
+    <div class="content-box col-md-8">
+        <div class="page-title">
+            <h2>문서 수정</h2>
+            <hr id="title-underbar">
+        </div>
+        <br>
+        <div class="page-content">
+            <form action="/Design_documents/<%=@doc.id %>/edit" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="user_id" value="<%=current_user.id %>"></input>
+                <div class="form-group">
+                    <span>* </span><label>제목</label>
+                    <input type="text" class="form-control" name="title" value="<%= @doc.title %>"></input>
+                </div>
+                <div class="form-group">
+                    <span>* </span><label>내용</label>
+                    <textarea class="tinymce form-control" name="content" rows="20" cols="80">
+                        <%= @doc.content.html_safe %>
+                    </textarea>
+                </div>
+                <div class="form-group">
+                    <span>* </span><label>첨부파일 수정</label>
+                    <input type="file" name="files[]" id="file-input-button" multiple></input>
+                    <br>
+                    <% @doc.files.each_with_index do |f, index| %>
+                        <li id="file_<%=index%>" style="list-style:none; padding-left:10px;">- <%= @doc.files[index].path.split("/").last %> <button class="delete-button" id="<%=index %>" type="button" onclick="return reply_click(this.id)">삭제</button></li>
+                    <% end %>
+                </div>
+                <input type="hidden" name="delete_file_index" value="" id="delete-file-index"></input>
+                <div class="actions">
+                    <button type="submit" class="btn btn-default">수정 완료</button>
+                </div>
+            </form>
+        </div>
+        <br><br>
+    </div>
+</div>
+
+<style>
+    .delete-button{
+        background-color:transparent;
+        color:#db3445;
+        border: 0px;
+    }
+    div.actions{
+        text-align:right;
+    }
+    #file-input-button{
+        margin-left:10px;
+    }
+    .page-title{
+        font-family:Jeju;
+    }
+    .content-box{
+        margin-top:60px;
+        margin-left:10px;
+    }
+    hr#title-underbar{
+       border-bottom:1px solid #eee;
+    }
+    .form-control::-moz-placeholder {
+      color: #555;
+    }
+    .form-control:-ms-input-placeholder {
+      color: #555;
+    }
+    .form-control::-webkit-input-placeholder {
+      color: #555;
+    }
+    
+    form > div > span {
+        color:#db3445;
+     }
+     .mce-branding.mce-widget.mce-label.mce-flow-layout-item.mce-last{
+         color:transparent;
+     }
+     div.mce-path.mce-flow-layout-item.mce-first{
+         display:none;
+     }
+     @media (max-width: 480px) {
+        .content-box {
+            margin-top:0;
+            padding-top:10px;
+            margin-left: 0;
+        }
+      }
+      @media (max-width: 320px) {
+        nav{
+            max-width:320px;
+        }
+      }
+</style>
+
+<script>
+    function reply_click(clicked_id)
+    {
+        delete_index.push(clicked_id);
+        $("#delete-file-index").val(delete_index);
+        $("li#file_"+clicked_id).css("display","none");
+        $("button#"+clicked_id).css("display","none");
+        alert("첨부 파일이 삭제되었습니다.")
+    }
+
+    var delete_index = $("#delete-file-index").val();
+    
+    if (delete_index == ""){
+        delete_index = []
+        console.log(delete_index);
+    };
+        
+    
+</script>

@@ -1,0 +1,365 @@
+<div class="container">
+    <%= render "layouts/sidebar" %>
+    <div class="content-box col-md-8">
+        <div class="page-title">
+            <h2>Design Documents</h2>
+            <hr id="title-underbar">
+        </div>
+        <br>
+        <div class="page-content" style="text-align:center;">
+            <div class="search-bar">
+                <form action="/Design_documents/search/" method="get">
+                    <select class="form-control" name="method" id="method-selector">
+                        <% if @method == "title" %>
+                            <option value="title" selected="selected">제목</option>
+                            <option value="title+content">제목+내용</option>
+                        <% else %>
+                            <option value="title">제목</option>
+                            <option value="title+content" selected="selected">제목+내용</option>
+                        <% end %> 
+                    </select>
+                    <input type="text" class="form-control" id="search-bar" name="search_keyword" value="<%=@search_keyword %>"></input>
+                    <button type="submit" class="btn btn-default">검색</button>
+                </form>
+            </div>
+            <% if @docs.present? %>
+            <table class="table" id="mobile-table">
+                <tbody>
+                    <% @docs.each do |d| %>
+                        <tr>
+                            <td><a href="/Design_documents/show/<%=d.id %>" style="color:black"><%= d.title %></a></td>
+                            <td><%= d.created_at.strftime('%Y-%m-%d') %></td>
+                        </tr>
+                    <% end %>
+                </tbody>
+            </table>
+            <table class="table" id="web-table">
+                <thead>
+                    <tr>
+                        <th>Design Documents</th>
+                        <th>작성일</th>
+                        <th>수정일</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% @docs.each do |d| %>
+                        <tr>
+                            <td><a href="/Design_documents/show/<%=d.id %>" style="color:black"><%= d.title %></a></td>
+                            <td><%= d.created_at.strftime('%Y-%m-%d') %></td>
+                            <td><%= d.updated_at.strftime('%Y-%m-%d') %></td>
+                        </tr>
+                    <% end %>
+                </tbody>
+            </table>
+            <% end %>
+        </div>
+        <% if user_signed_in? %>
+            <p class="new-button-wrapper">
+                <% if can? :create, DesignDocument %>
+                    <a href="/Design_documents/new" class="btn btn-default" id="new-button">문서 작성</a>
+                <% end %>
+            </p>
+        <% else %>
+            <p class="new-button-wrapper">
+                <a href="/users/sign_in" class="btn btn-default" id="new-button">문서 작성</a>
+            </p>
+        <% end %>
+        <div class="text-center" id="pagination-web">
+            <%= will_paginate @docs, renderer: BootstrapPagination::Rails, :previous_label => t("<<"), :next_label => t(">>"), :inner_window => 3, :outer_window => 0 %>
+        </div>
+
+        <div class="text-center" id="pagination-mobile">
+            <%= will_paginate @docs, renderer: BootstrapPagination::Rails, :previous_label => t("<<"), :next_label => t(">>"), :inner_window => 0, :outer_window => 0 %>
+        </div>
+    </div>
+</div>
+<style>
+    div.search-bar{
+        padding-left:5px;
+        padding-right:5px;
+        padding-top:10px;
+        padding-bottom:10px;
+        border:1px  solid #eee;
+        margin-bottom:30px;
+    }
+    input#search-bar{
+        display:inline-block;
+        width:70%;
+        margin-right:10px;
+        margin-left:10px;
+    }
+    select#method-selector, select#category-selector, select#answer-selector{
+        width:12%;
+        display:inline-block;
+        font-size:13px;
+        margin-right:10px;
+    }
+    .pagination li.active a {
+      color: #db3445;
+    }
+    hr#title-underbar{
+       border-bottom:1px solid #eee;
+       margin-bottom:0px;
+    }
+
+    a#new-button{
+        font-size: 11px;
+        padding: 3px 6px;
+    }
+    p.new-button-wrapper{
+        text-align:right;
+    }
+    .page-title{
+        font-family:Jeju;
+    }
+    .content-box{
+        margin-top:60px;
+        margin-left:10px;
+    }
+    .table{
+        vertical-align:middle;
+    }
+    thead > tr > th{
+        text-align:center;
+    }
+    .table > tbody > tr > td{
+        padding-top:10px;
+        padding-bottom:10px;
+    }
+    tbody > tr > td:nth-child(1){
+        padding-left:20px;
+        max-width:300px;
+        text-overflow: ellipsis;
+        white-space: nowrap; 
+        overflow: hidden; 
+        text-align:left;
+    }
+    tbody > tr > td:nth-child(2){
+        width:105px;
+        text-align:center;
+    }
+    tbody > tr > td:nth-child(3){
+        width:105px;
+        text-align:center;
+    }
+    /*tbody > tr > td:nth-child(5){*/
+    /*    max-width:65px;*/
+    /*    text-overflow: ellipsis;*/
+    /*    white-space: nowrap; */
+    /*    overflow: hidden; */
+
+    /*    text-align:center;*/
+    /*}*/
+    table > tbody > tr:last-child > td {
+        border-bottom:1px solid #eee;
+    }
+    .table > thead > tr > th{
+        border-bottom:1px solid #eee;
+    }
+    thead{
+        border-top:2px solid #eee;
+    }
+    
+    ul.pagination.pagination > li > a{
+        color:#db3445;
+    }
+    ul.pagination.pagination > li > a > span{
+        color:#777;
+    }
+    ul.pagination.pagination > li.active > span{
+        background-color:#db3445;
+        border-color:#db3445;
+    }
+    @media (max-width: 480px) {
+        .content-box {
+            margin-top:0;
+            padding-top:10px;
+            margin-left: 0;
+        }
+        div#pagination-web{
+            display:none;
+        }
+        div#pagination-mobile{
+            display:block;
+        }
+    }
+    table#mobile-table{
+        display:none;
+    }
+    div#pagination-mobile{
+        display:none;
+    }
+    
+</style>
+<style>
+     @media(max-width: 692px){
+        input#search-bar{
+            display:inline-block;
+            width:80%;
+            max-width:80%;
+            margin: auto;
+            margin-right: 14px;
+            margin-top: 10px;
+            margin-left: -10px;
+        }
+        select#method-selector, select#category-selector, select#answer-selector{
+            width:90%;
+            display:inline-block;
+            font-size:13px;
+            margin-right:8px;
+        }
+        option{
+            text-align:center;
+        }
+        .btn-default{
+            font-size: 14px;
+            margin-left: -10px;
+            margin-top: -2px;
+        }
+        div.search-bar{
+            margin-bottom:15px;
+        }
+    }
+    @media(max-width: 600px){
+        table#mobile-table.table{
+            table-layout: fixed;
+            width:100%;
+            max-width:100%;
+        }
+        select#method-selector, select#category-selector, select#answer-selector{
+            width:95%;
+            display:inline-block;
+            font-size:13px;
+            margin-right:8px;
+        }
+        tbody > tr > td:nth-child(1){
+            max-width:48%;
+            width:48%;
+            overflow: hidden; 
+            text-overflow: ellipsis;
+            white-space:nowrap;
+            text-align:left;
+        }
+        tbody > tr > td:nth-child(2){
+            max-width:51px;
+            width: 51px;
+            padding-left:10px;
+        }
+        table#web-table{
+            display:none;
+        }
+        table#mobile-table{
+            display:table;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .content-box {
+            margin-top:0;
+            padding-top:10px;
+            margin-left: 0;
+        }
+        div#pagination-web{
+            display:none;
+        }
+        div#pagination-mobile{
+            display:block;
+        }
+        select#method-selector, select#category-selector, select#answer-selector{
+            width:97%;
+            display:inline-block;
+            font-size:13px;
+            margin-right:8px;
+        }
+        input#search-bar{
+            display:inline-block;
+            width:78%;
+            max-width:78%;
+            margin: auto;
+            margin-right: 20px;
+            margin-top: 10px;
+            margin-left: 3px;
+        }
+    }
+    @media(max-width: 436px){
+        tbody > tr > td:nth-child(1){
+            max-width:45%;
+            width:45%;
+            overflow: hidden; 
+            text-overflow: ellipsis;
+            white-space:nowrap;
+            text-align:left;
+        }
+        tbody > tr > td{
+            font-size:12px;
+        }
+        tbody > tr > td:nth-child(2){
+            max-width:50px;
+            width: 50px;
+            padding-left:10px;
+        }
+        table#web-table{
+            display:none;
+        }
+        select#method-selector, select#category-selector, select#answer-selector{
+            width:96%;
+            display:inline-block;
+            font-size:13px;
+            margin-left:3px;
+            margin-right:6px;
+        }
+        .btn-default{
+            font-size: 14px;
+            margin-left: -11px;
+            margin-right:7px;
+            margin-top: -2px;
+        }
+    }
+    
+    @media(max-width: 401px){
+        input#search-bar{
+            display:inline-block;
+            width:78%;
+            max-width:78%;
+            margin: auto;
+            margin-right: 20px;
+            margin-top: 10px;
+            margin-left: 4px;
+        }
+        
+        .btn-default{
+            font-size: 14px;
+            margin-left: -20px;
+            margin-top: -2px;
+        }
+    }
+    
+    @media(max-width: 360px){
+       input#search-bar{
+            display:inline-block;
+            width:78%;
+            max-width:78%;
+            margin: auto;
+            margin-right: 18px;
+            margin-top: 10px;
+            margin-left: 4px;
+        }
+    }
+    @media(max-width: 320px){
+        input#search-bar{
+            display:inline-block;
+            width:75%;
+            max-width:75%;
+            margin: auto;
+            margin-right: 18px;
+            margin-top: 10px;
+        }
+        .btn-default{
+            font-size: 12px;
+            margin-left: -15px;
+            margin-top: -2px;
+        }
+        h2 {
+            font-size: 28px;
+        }
+</style>

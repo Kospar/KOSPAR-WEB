@@ -1,0 +1,48 @@
+<div class="container">
+  <div class="edit_user_ wrapper col-md-offset-2 col-md-8 content-box">
+    <div class="page-title">
+      <h3>인증 메일을 받지 못 하셨나요?</h3>
+      <hr id="title-underbar">
+    </div>
+    <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
+      <%= devise_error_messages! %>
+      <div class="form-group">
+        <p>가입시 사용했던 이메일을 입력해주세요.</p>
+        <%= f.email_field :email, autofocus: true, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), :class => "form-control"  %>
+      </div>
+
+    
+      <div class="actions">
+        <%= f.submit "인증 메일 재전송", :class =>"btn btn-default" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+<style>
+  #error_explanation{
+    background-color: #eee;
+  }
+
+  .page-title, .account-delete{
+      font-family:Jeju;
+  }
+  .content-box{
+      margin-top:30px;
+      padding-top:10px;
+  }
+  hr#title-underbar, hr{
+     border-bottom:1px solid #eee;
+  }
+  .actions{
+    text-align:right;
+    margin-bottom:30px;
+  }
+  @media (max-width: 480px) {
+      .content-box {
+        margin-top: 0; 
+        padding-top: 10px;
+      }
+    }
+
+</style>
+

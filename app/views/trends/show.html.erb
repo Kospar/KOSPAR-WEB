@@ -1,0 +1,196 @@
+<div class="container">
+    <%= render "layouts/sidebar" %>
+    <div class="content-box col-md-8">
+        <div class="page-title">
+            <h2>Latest Trends</h2>
+            <ol class="breadcrumb">
+              <li><a href="/">Home</a></li>
+              <li class="active"><a href="/trends/latest">Latest Trends</a></li>
+            </ol>
+        </div>
+        <hr id="title-underbar">
+        <div class="page-content">
+            <div class="trend-wrapper">
+                <div class="trend-info">
+                    <h3><%= @trend.title %></h3>
+                    <p class="created_at">작성 : <%= @trend.created_at.strftime("%Y-%m-%d. %H:%M") %></p>
+                    <% if @trend.created_at != @trend.updated_at %>
+                    <p class="created_at">수정 : <%= @trend.updated_at.strftime("%Y-%m-%d. %H:%M") %></p>
+                    <% end %>
+                </div>
+                <hr id="content-split-bar">
+                <div class="text-right" style="margin-right:10px;">
+                <% if @trend.files.present? %>
+                    <% @file_count = @trend.files.length %>
+                    <div class="upload-files">
+                        <li class="dropdown web">
+                          <a href="#" class="dropdown-toggle" style="color:#db3445"  data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">첨부파일(<%=@file_count %>)</span></a>
+                              <ul class="dropdown-menu dropdown-menu-right" id="files-list">
+                                  <% @trend.files.each_with_index do |f, index| %>
+                                    <a target="_blank" href="<%=f %>"style="color:#828282"><li><%= @trend.files[index].path.split("/").last %></li></a>
+                                  <% end %>
+                              </ul>
+                        </li>
+                    </div>
+                <% end %>
+                </div>
+                <div class="trend-content">
+                    <%= @trend.content.html_safe %>
+                </div>
+            </div>
+            <% if user_signed_in? %>
+                <p class="button-wrapper">
+                    <% if can? :update, Trend %>
+                        <a href="/trends/latest/<%=@trend.id %>/edit" class="btn btn-default" id="edit-button">수정</a></li>
+                    <% end %>
+                    <% if can? :delete, Trend %>
+                        <a href="/trends/latest/<%=@trend.id %>/destroy" class="btn btn-default" id="delete-button" onclick="return confirm('정말로 삭제하시겠습니까? 삭제 후에는 복구가 불가능합니다.')">삭제</a></li>
+                    <% end %>
+                    <a href="/trends/latest" class="btn btn-default" id="back-button">게시판으로</a></li>
+                </p>
+            <% else %>
+                <br>
+                <div class="text-right">
+                    <a href="/trends/latest" class="btn btn-default">게시판으로</a></li>
+                </div>
+            <% end %>
+        </div>
+    </div>
+</div>
+<br><br>
+
+<script>
+    $(function(){
+        $('img').each(function(){
+          var $this = $(this)
+          $this.attr('src',$this.attr('src').replace('../','/'))
+         });
+    });
+</script>
+<style>
+    .upload-files > li{
+        list-style: none;
+    }
+    div.trend-content{
+        padding-left:10px;
+        margin-top:30px;
+    }
+    p.created_at{
+        padding-left:2px;
+        margin-bottom:0px;
+        font-size:13px;
+        color:#828282;
+        opacity:0.8;
+    }
+    div.trend-info{
+        padding-left:10px;
+        padding-bottom:5px;
+    }
+    hr#title-underbar{
+       border-bottom:1px solid #eee;
+    }
+    div.trend-wrapper{
+        padding-bottom:28px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    hr#content-split-bar{
+        border-color:#ddd;
+        border-style: dotted;
+    }
+    hr#edit-bar{
+        margin-bottom:0;
+    }
+    a#new-button, a#edit-button, a#delete-button, a#back-button{
+        font-size: 11px;
+        padding: 3px 6px;
+    }
+    p.button-wrapper{
+        float:right;
+        display:inline-block;
+        margin-top:10px;
+    }
+    ul.edit-delete > li{
+        list-style:none;
+        display:inline-block;
+        margin-left:10px;
+        margin-right:10px;
+        color:#2d2d2d;
+        text-decoration:none;
+        font-weight:bold;
+    }
+    ul.edit-delete{
+        float:right;
+        display:inline-block;
+        text-align:right;
+        margin-top:45px;
+        margin-bottom:0;
+        padding-left:0;
+    }
+    ul.edit-delete > li> a , ul.edit-delete > li> a:hover, ul.edit-delete > li>a:visited, ul.edit-delete > li>a:active{
+        color:#2d2d2d;
+        text-decoration:none;
+    }
+    .page-title{
+        font-family:Jeju;
+    }
+    .content-box{
+        margin-top:60px;
+        margin-left:10px;
+    }
+    ol.breadcrumb{
+        background-color:transparent;
+        float:right;
+        font-size:12px;
+        padding-right:0px;
+    }
+    ol.breadcrumb li+li:before {
+        padding: 8px;
+        color: black;
+        content: ">";
+    }
+    ol.breadcrumb > li > a{
+        color:#828282;
+        text-decoration:none;
+    }
+    ol.breadcrumb li.active > a{
+        color:#db3445;
+    }
+    .breadcrumb{
+        margin-top: 27px;
+        margin-bottom:0px;
+    }
+    .page-title > h2{
+        display:inline-block;
+    }
+    
+    .dropdown-menu{
+        padding: 10px 10px;
+    }
+    @media (max-width: 480px) {
+        .content-box {
+            margin-top:0;
+            padding-top:10px;
+            margin-left: 0;
+        }
+        div.trend-content {
+            padding-left: 0px;
+            margin-top: 15px;
+        }
+        div.trend-info {
+            padding-left: 2px;
+        }
+        img{
+            max-width:100%;
+            height:auto;
+            display:block;
+            margin: auto;
+            margin-bottom:10px;
+        }
+    }
+     
+    @media (max-width: 600px) {
+        ol.breadcrumb{
+            display:none;
+        }
+    }
+</style>

@@ -1,0 +1,103 @@
+<div class="container">
+    <%= render "layouts/sidebar" %>
+    <div class="content-box col-md-8">
+        <div class="page-title">
+            <h2>About us</h2>
+            <% if user_signed_in?  %>
+                <% unless @about.present? %>
+                    <% if can? :create, @about %>
+                        <a href="/About_us/new" class="btn btn-default" id="new-button">About_us 작성</a>
+                        <a class="btn btn-default" id="new-button-mobile" onclick="return confirm('About_us 작성은 pc 버전에서만 가능합니다.')">About_us 작성</a>
+                    <% end %>
+                <% else %>
+                    <% if can? :update, @about %>
+                        <a href="/About_us/edit" class="btn btn-default" id="new-button">About_us 수정</a>
+                        <a class="btn btn-default" id="new-button-mobile" onclick="return confirm('About_us 수정은 pc 버전에서만 가능합니다.')">About_us 수정</a>
+                    <% end %>
+                <% end %>
+            <% end %>
+            <hr id="title-underbar"> 
+        </div>
+        <% if @about.present? %>
+            <div class="page-content">
+                <br>
+                <%= @about.content.html_safe %>
+            </div>
+        <% else %>
+            <div class="page-content">
+                KOSPAR 소개메시지를 작성해주세요.
+            </div>
+        <% end %>
+        
+    </div>
+</div>
+<br><br><br><br>
+
+<style>
+    td {
+        padding-left:10px !important;
+        padding-right:10px !important;
+    }
+    .page-title{
+        font-family:Jeju;
+    }
+    .content-box{
+        margin-top:60px;
+        margin-left:10px;
+    }
+    hr#title-underbar{
+       border-bottom:1px solid #eee;
+    }
+    .page-title > h2{
+        display:inline-block;
+    }
+    a#new-button{
+        font-size: 11px;
+        padding: 3px 6px;
+        float:right;
+        margin-top:30px;
+    }
+    a#new-button-mobile{
+        font-size: 11px;
+        padding: 3px 6px;
+        float:right;
+        margin-top:30px;
+        display:none;
+    }
+    @media (max-width: 480px) {
+        a#new-button{
+            display:none;
+        }
+        a#new-button-mobile{
+            display:block;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        div.page-content > p > img{
+            max-width:300px;
+            display:block;
+            margin: auto;
+            margin-bottom:10px;
+        }
+        td{
+            display: block;
+            width:100% !important;
+            height:0;
+        }
+        td > img{
+            margin-top:10px;
+            margin-bottom:10px;
+            vertical-align:top;
+        }
+        table{
+            height: auto !important;
+        }
+        tr{
+            height: auto !important;
+        }
+        td{
+            height: auto !important;
+        }
+    }
+</style>

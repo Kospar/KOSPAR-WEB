@@ -1,0 +1,13 @@
+class CreateReplies < ActiveRecord::Migration
+  def change
+    create_table :replies do |t|
+      t.string :title
+      t.text :content
+      t.string :image
+      t.references :user, index: true, foreign_key: true
+      t.references :qna, index: true, foreign_key: true
+
+      t.timestamps null: false
+    end
+  end
+end

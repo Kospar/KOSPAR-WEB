@@ -1,0 +1,54 @@
+<div class="container">
+  <div class="edit_user_ wrapper col-md-offset-2 col-md-8 content-box">
+    <div class="page-title">
+      <h3>새 비밀번호 발급</h3>
+      <hr id="title-underbar">
+    </div>
+
+    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
+      <%= devise_error_messages! %>
+      <%= f.hidden_field :reset_password_token %>
+    
+      <div class="form-group">
+        <%= f.label "새 비밀번호" %><em>(영문 + 숫자 8자 이상)</em><br />
+        <%= f.password_field :password, autofocus: true, autocomplete: "off", :class =>"form-control" %>
+      </div>
+    
+      <div class="form-group">
+        <%= f.label "비밀번호 확인" %><br />
+        <%= f.password_field :password_confirmation, autocomplete: "off", :class =>"form-control" %>
+      </div>
+    
+      <div class="actions">
+        <%= f.submit "비밀번호 변경", :class => "btn btn-default" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+<style>
+    .page-title, .account-delete{
+      font-family:Jeju;
+  }
+  .content-box{
+      margin-top:30px;
+      padding-top:10px;
+  }
+  hr#title-underbar, hr{
+     border-bottom:1px solid #eee;
+  }
+  .actions{
+    text-align:right;
+    margin-bottom:30px;
+  }
+  #error_explanation{
+    background-color: #eee;
+  }
+  @media (max-width: 480px) {
+      .content-box {
+        margin-top: 0; 
+        padding-top: 10px;
+      }
+    }
+
+</style>
+    
