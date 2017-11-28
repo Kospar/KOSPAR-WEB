@@ -66,7 +66,3 @@ group :development do
   gem 'rails_db'
 end
 
-
-group :production do
-  gem 'mysql2'
-end
