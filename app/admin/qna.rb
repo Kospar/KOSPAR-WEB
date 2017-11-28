@@ -11,6 +11,7 @@ ActiveAdmin.register Qna do
   index do
     selectable_column
     actions
+    id_column
     Qna.column_names.each do |c|
       column c.to_sym
     end

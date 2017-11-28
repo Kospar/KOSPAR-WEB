@@ -11,6 +11,7 @@ ActiveAdmin.register ForumPost do
   index do
     selectable_column
     actions
+    id_column
     ForumPost.column_names.each do |c|
       column c.to_sym
     end

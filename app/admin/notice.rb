@@ -10,6 +10,7 @@ ActiveAdmin.register Notice do
   index do
     selectable_column
     actions
+    id_column
     Notice.column_names.each do |c|
       column c.to_sym
     end

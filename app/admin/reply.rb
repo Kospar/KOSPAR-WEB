@@ -12,6 +12,7 @@ ActiveAdmin.register Reply do
   index do
     selectable_column
     actions
+    id_column
     Reply.column_names.each do |c|
       column c.to_sym
     end

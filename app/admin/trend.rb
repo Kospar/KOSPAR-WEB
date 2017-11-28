@@ -11,6 +11,7 @@ ActiveAdmin.register Trend do
   index do
     selectable_column
     actions
+    id_column
     Trend.column_names.each do |c|
       column c.to_sym
     end
