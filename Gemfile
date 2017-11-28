@@ -16,7 +16,8 @@ gem 'fog-aws'
 gem 'font-awesome-sass'
 gem 'cancancan'
 gem 'activeadmin'
-
+gem 'execjs'
+gem 'therubyracer'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.5'
