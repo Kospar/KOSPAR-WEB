@@ -16,7 +16,7 @@ ActiveAdmin.register ForumBoard do
     end
   end
  permit_params do
-    permitted = [:permitted, :subject]
+    permitted = [:permitted, :id, :subject, :user_id, :created_at, :updated_at]
 #   permitted << :other if params[:action] == 'create' && current_user.admin?
 #   permitted
  end

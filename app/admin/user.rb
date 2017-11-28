@@ -16,7 +16,7 @@ ActiveAdmin.register User do
     end
   end
  permit_params do
-    permitted = [:permitted, :email, :name, :nickname, :admin, :company_name, :company_private, :company_address, :company_address_details, :company_address_extra_info, :company_address_post_num, :company_tel_num_1, :company_tel_num_2, :company_tel_num_3]
+    permitted = [:permitted, :id, :email, :name, :nickname, :admin, :company_name, :company_private, :company_address, :company_address_details, :company_address_extra_info, :company_address_post_num, :company_tel_num_1, :company_tel_num_2, :company_tel_num_3, :reset_password_token, :reset_password_sent_at, :remember_created_at, :sign_in_count, :current_sign_in_at, :last_sign_in_at, :current_sign_in_ip, :last_sign_in_ip, :confirmation_token, :confirmed_at, :confirmation_sent_at, :unconfirmed_email, :created_at, :updated_at]
 #   permitted << :other if params[:action] == 'create' && current_user.admin?
 #   permitted
  end

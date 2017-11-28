@@ -16,7 +16,7 @@ ActiveAdmin.register Notice do
   end
  menu priority: 6
  permit_params do
-    permitted = [:permitted, :title, :startDate, :endDate, :address, :y_location, :x_location, :content]
+    permitted = [:permitted, :id, :title, :startDate, :endDate, :address, :y_location, :x_location, :content, :user_id, :created_at, :updated_at]
 #   permitted << :other if params[:action] == 'create' && current_user.admin?
 #   permitted
  end

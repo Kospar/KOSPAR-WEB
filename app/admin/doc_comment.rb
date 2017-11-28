@@ -16,7 +16,7 @@ ActiveAdmin.register DocComment do
     end
   end
  permit_params do
-    permitted = [:permitted, :content]
+    permitted = [:permitted, :id, :content, :user_id, :design_document_id, :created_at, :updated_at]
 #   permitted << :other if params[:action] == 'create' && current_user.admin?
 #   permitted
  end

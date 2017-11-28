@@ -16,7 +16,7 @@ ActiveAdmin.register Trend do
     end
   end
  permit_params do
-    permitted = [:permitted, :title, :content, :files]
+    permitted = [:permitted, :id, :title, :category, :content, :user_id, :files, :created_at, :updated_at]
 #   permitted << :other if params[:action] == 'create' && current_user.admin?
 #   permitted
  end
