@@ -87,5 +87,5 @@ Rails.application.configure do
       :password => ENV["MAILGUN_PASSWORD"]
     }
   
-  config.action_mailer.default_url_options = {host:'https://www.kospar.org'}
+  config.action_mailer.default_url_options = {host:'http://13.124.122.51'}
 end
