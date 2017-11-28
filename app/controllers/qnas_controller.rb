@@ -1,5 +1,5 @@
 class QnasController < ApplicationController
-  before_filter :custom_method, :only => [:reply, :reply_create, :reply_destroy, :reply_update, :reply_edit]
+  before_filter :custom_method, :only => [:reply, :reply_create, :reply_destroy, :reply_update, :reply_edit, :update, :destroy, :edit]
   before_filter :custom_method_2, :only => [:update, :destroy, :edit]
   def index
     @qnas = Qna.paginate(:page => params[:page], :per_page => 10).order('id DESC')
