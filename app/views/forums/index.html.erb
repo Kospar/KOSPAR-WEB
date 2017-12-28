@@ -5,6 +5,9 @@
             <h2 style="margin-bottom:0; display:inline-block;">KOSPAR Forums</h2>
             <% if user_signed_in? %>
                 <p class="new-button-wrapper">
+                    <% if current_user.admin? %>
+                    <a href="/forum_boards" class="btn btn-default" id="new-button">포럼 게시판 관리</a>
+                    <% end %>
                     <a href="/forums/new" class="btn btn-default" id="new-button">새글 작성</a>
                 </p>
             <% else %>

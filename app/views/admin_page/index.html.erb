@@ -11,6 +11,7 @@
             <a href="https://app.mailgun.com/app/dashboard"  style="color:white;" class="btn btn-warning">Mailgun</a>
             <a href="https://analytics.google.com/analytics/web/?authuser=0#management/Settings/a110145201w164360274p165167854/"  style="color:white;" class="btn btn-success">Google Analytics</a>
             <a href="https://s3.console.aws.amazon.com/s3/buckets/kospar/?region=us-east-1&tab=overview"  style="color:white;" class="btn btn-danger">AWS S3 Bucket</a>
+            <a href="/forum_boards" class="btn btn-info" style="color:white;">포럼 게시판 관리</a>
             <a href="https://github.com/Kospar/KOSPAR" class="btn btn-default">github</a>
         </div>
         <hr>
@@ -155,7 +156,6 @@
                 <%= will_paginate @qnas, renderer: BootstrapPagination::Rails, :previous_label => t("<<"), :next_label => t(">>"), :inner_window => 3, :outer_window => 0 %>
             </div>
             <% else %>
-                <p>작성하신 답변이 없습니다.</p>
             <% end %>
         </div>
         <div class="mobile-size">
@@ -180,7 +180,6 @@
                 <%= will_paginate @qnas, renderer: BootstrapPagination::Rails, :previous_label => t("<<"), :next_label => t(">>"), :inner_window => 0, :outer_window => 0 %>
             </div>
             <% else %>
-                <p>작성하신 답변이 없습니다.</p>
             <% end %>
         </div>
         <div class="web-size">
@@ -209,7 +208,6 @@
                     <%= will_paginate @forums, renderer: BootstrapPagination::Rails, :previous_label => t("<<"), :next_label => t(">>"), :inner_window => 3, :outer_window => 0 %>
                 </div>
             <% else %>
-                <p>작성하신 글이 없습니다.</p>
             <% end %>
         </div>
         <div class="mobile-size">
@@ -234,7 +232,6 @@
                     <%= will_paginate @forums, renderer: BootstrapPagination::Rails, :previous_label => t("<<"), :next_label => t(">>"), :inner_window => 0, :outer_window => 0 %>
                 </div>
             <% else %>
-                <p>작성하신 글이 없습니다.</p>
             <% end %>
         </div>
         <hr>
@@ -273,7 +270,6 @@
                     <%= will_paginate @doc_comments, renderer: BootstrapPagination::Rails, :previous_label => t("<<"), :next_label => t(">>"), :inner_window => 3, :outer_window => 0 %>
                 </div>
             <% else %>
-                <p>작성하신 댓글이 없습니다.</p>
             <% end %>
         </div>
         <div class="mobile-size">
@@ -298,7 +294,6 @@
                     <%= will_paginate @doc_comments, renderer: BootstrapPagination::Rails, :previous_label => t("<<"), :next_label => t(">>"), :inner_window => 0, :outer_window => 0 %>
                 </div>
             <% else %>
-                <p>작성하신 댓글이 없습니다.</p>
             <% end %>
         </div>
         <div class="web-size">
@@ -327,7 +322,6 @@
                     <%= will_paginate @open_comments, renderer: BootstrapPagination::Rails, :previous_label => t("<<"), :next_label => t(">>"), :inner_window => 3, :outer_window => 0 %>
                 </div>
             <% else %>
-                <p>작성하신 댓글이 없습니다.</p>
             <% end %>
         </div>
         <div class="mobile-size">
@@ -352,7 +346,6 @@
                     <%= will_paginate @open_comments, renderer: BootstrapPagination::Rails, :previous_label => t("<<"), :next_label => t(">>"), :inner_window => 0, :outer_window => 0 %>
                 </div>
             <% else %>
-                <p>작성하신 댓글이 없습니다.</p>
             <% end %>
         </div>
         <div class="web-size">
@@ -381,7 +374,6 @@
                     <%= will_paginate @forum_comments, renderer: BootstrapPagination::Rails, :previous_label => t("<<"), :next_label => t(">>"), :inner_window => 3, :outer_window => 0 %>
                 </div>
             <% else %>
-                <p>작성하신 댓글이 없습니다.</p>
             <% end %>
         </div>
         <div class="mobile-size">
@@ -406,7 +398,6 @@
                     <%= will_paginate @forum_comments, renderer: BootstrapPagination::Rails, :previous_label => t("<<"), :next_label => t(">>"), :inner_window => 0, :outer_window => 0 %>
                 </div>
             <% else %>
-                <p>작성하신 댓글이 없습니다.</p>
             <% end %>
         </div>
         <hr>

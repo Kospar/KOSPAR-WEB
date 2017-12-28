@@ -26,7 +26,6 @@ class ApplicationController < ActionController::Base
         session[:previous_url] || root_path
     end
   end
-  
 
   protected
 

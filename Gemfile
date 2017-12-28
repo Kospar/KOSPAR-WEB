@@ -15,7 +15,8 @@ gem "will_paginate-bootstrap"
 gem 'fog-aws'
 gem 'font-awesome-sass'
 gem 'cancancan'
-gem 'activeadmin'
+gem 'activeadmin', github: 'activeadmin/activeadmin' 
+gem 'inherited_resources', github: 'activeadmin/inherited_resources'
 gem 'execjs'
 gem 'therubyracer'
 
